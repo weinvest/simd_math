@@ -56,6 +56,8 @@ struct CLS_NAME
     static const VAL_ELE_TYPE SINGLE_MIN_NORM_VALUE = *(VAL_ELE_TYPE*)&MIN_NORM_VALUE_REP;
 
     static const int32_t STEP_CNT = ITEM_COUNT;
+    static const CLS_NAME CONST_m1{-1};
+    static const CLS_NAME CONST_m0p5{-0.5};
     static const CLS_NAME CONST_0{};
     static const CLS_NAME CONST_0p5{0.5};
     static const CLS_NAME CONST_1{1.0};
@@ -482,20 +484,32 @@ struct CLS_NAME
 
     }
 
-    VAL_TYPE pow(VAL_TYPE a, VAL_TYPE b)
+    [[gnu::always_inline]]
+    inline VAL_TYPE pow(VAL_TYPE a, VAL_TYPE b)
     {
-
+        b = log(b);
+        a = mul(a, b);
+        return exp(a);
     }
 
-    VAL_TYPE sin(VAL_TYPE v)
+    [[gnu::always_inline]]
+    inline VAL_TYPE sin(VAL_TYPE v)
     {
         return SIMDAPI(sin, API_PREFIX, API_SUBFIX)(v);
     }
-    }
 
-    VAL_TYPE cos(VAL_TYPE v)
+    [[gnu::always_inline]]
+    inline VAL_TYPE cos(VAL_TYPE v)
     {
         return SIMDAPI(cos, API_PREFIX, API_SUBFIX)(v);
+    }
+
+    VAL_TYPE pdf(VAL_TYPE v)
+    {
+        static const auto recip_sqrt_2pi = const_val(0.3989422804014327);
+        v = mul(v, v);
+        v = mul(v, VALUE_m0p5);
+        return exp(v);
     }
 
     VAL_TYPE cdf(VAL_TYPE x)
