@@ -10,20 +10,7 @@
 //using int64x4_t = __m256i;
 //using int64x2_t = __m128i;
 //using int32x4_t = __m128i;
-#define VAL_TYPE __m256d
-#define VAL_ELE_TYPE double
-#define INT_VAL_TYPE __m256i
-#define INT_ELE_TYPE int64_t
-#define ITEM_COUNT 4
-#define EXP_ITER_CNT 11
-#define LOG_ITER_CNT 7
-#define EXPO_BIT_CNT 11
-#define MANT_BIT_CNT 52
 #define SIMDAPI(name, prefix, subfix) BOOST_PP_CAT(prefix, BOOST_PP_CAT(_##name,subfix))
-#define API_PREFIX _m256
-#define API_SUBFIX _pd
-#define INTAPI_SUBFIX _epi64
-
 struct CLS_NAME
 {
     VAL_TYPE v;
@@ -110,7 +97,7 @@ struct CLS_NAME
 
     [[gnu::always_inline]]
     CLS_NAME(BOOST_PP_ENUM_PARAMS(ITEM_COUNT, VAL_ELE_TYPE v))
-        :v(SIMDAPI(set1, API_PREFIX, API_SUBFIX)(BOOST_PP_ENUM_PARAMS(ITEM_COUNT, v)))
+        :v(SIMDAPI(set, API_PREFIX, API_SUBFIX)(BOOST_PP_ENUM_PARAMS(ITEM_COUNT, v)))
     {}
 
     [[gnu::always_inline]]
@@ -118,6 +105,19 @@ struct CLS_NAME
             :this(*(VAL_ELE_TYPE*)&vv)
     {}
 
+    //==== load store =========
+    [[gnu::always_inline]]
+    void load(VAL_ELE_TYPE* addr)
+    {
+        v = SIMDAPI(load, API_PREFIX, API_SUBFIX)(addr);
+    }
+
+    [[gnu::always_inline]]
+    void store(VAL_ELE_TYPE* addr)
+    {
+        SIMDAPI(store, API_PREFIX, API_SUBFIX)(addr, v);
+    }
+    
     //===== arithmetic operation ===========
     [[gnu::always_inline]]
     static inline VAL_TYPE add(VAL_TYPE v1, VAL_TYPE v2) {
@@ -538,5 +538,5 @@ struct CLS_NAME
 
 };
 
-
+#undef SIMDAPI
 

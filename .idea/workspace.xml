@@ -10,6 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2fe1801d-6459-4589-94f9-296030228ccf" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/FloatTemplate.h" afterPath="$PROJECT_DIR$/FloatTemplate.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -25,7 +26,7 @@
       <file leaf-file-name="FastMath.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FastMath.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-486">
+            <state relative-caret-position="18">
               <caret line="18" column="31" lean-forward="false" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
               <folding>
                 <element signature="e#56#68#0" expanded="true" />
@@ -57,18 +58,8 @@
       <file leaf-file-name="FloatTemplate.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FloatTemplate.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="510" column="26" lean-forward="false" selection-start-line="510" selection-start-column="26" selection-end-line="510" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FastMacros.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FastMacros.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="24" column="42" lean-forward="false" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
+            <state relative-caret-position="647">
+              <caret line="119" column="4" lean-forward="false" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -77,8 +68,8 @@
       <file leaf-file-name="BasicOp.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BasicOp.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="83" column="20" lean-forward="false" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
+            <state relative-caret-position="666">
+              <caret line="37" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding>
                 <element signature="e#35#47#0" expanded="true" />
                 <element signature="e#145#157#0" expanded="true" />
@@ -98,6 +89,16 @@
                 <element signature="e#1723#1735#0" expanded="true" />
                 <element signature="e#1957#1969#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Floatx8.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Floatx8.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="36">
+              <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -145,6 +146,8 @@
         <option value="$PROJECT_DIR$/Macros.h" />
         <option value="$PROJECT_DIR$/BasicOp.h" />
         <option value="$PROJECT_DIR$/FastMacros.h" />
+        <option value="$PROJECT_DIR$/Floatx8.h" />
+        <option value="$PROJECT_DIR$/DoubleX4.h" />
         <option value="$PROJECT_DIR$/FloatTemplate.h" />
       </list>
     </option>
@@ -204,7 +207,7 @@
   <component name="PropertiesComponent">
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/ss/planck" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -232,15 +235,16 @@
       <option name="presentableId" value="Default" />
       <updated>1528783209985</updated>
       <workItem from="1528783211155" duration="18490000" />
-      <workItem from="1528852081032" duration="29776000" />
+      <workItem from="1528852081032" duration="30622000" />
+      <workItem from="1528968985256" duration="1354000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48266000" />
+    <option name="totallyTimeSpent" value="50466000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1985" y="-4" width="1855" height="1084" extended-state="6" />
+    <frame x="1637" y="-4" width="1857" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -303,14 +307,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/FastMacros.h">
+    <entry file="file://$PROJECT_DIR$/BasicOp.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" column="52" lean-forward="false" selection-start-line="24" selection-start-column="52" selection-end-line="24" selection-end-column="52" />
+        <state relative-caret-position="1494">
+          <caret line="83" column="20" lean-forward="false" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
+          <folding>
+            <element signature="e#35#47#0" expanded="true" />
+            <element signature="e#145#157#0" expanded="true" />
+            <element signature="e#255#267#0" expanded="true" />
+            <element signature="e#365#377#0" expanded="true" />
+            <element signature="e#475#487#0" expanded="true" />
+            <element signature="e#591#603#0" expanded="true" />
+            <element signature="e#709#721#0" expanded="true" />
+            <element signature="e#826#838#0" expanded="true" />
+            <element signature="e#945#957#0" expanded="true" />
+            <element signature="e#1058#1070#0" expanded="true" />
+            <element signature="e#1175#1187#0" expanded="true" />
+            <element signature="e#1286#1298#0" expanded="true" />
+            <element signature="e#1396#1408#0" expanded="true" />
+            <element signature="e#1507#1519#0" expanded="true" />
+            <element signature="e#1602#1614#0" expanded="true" />
+            <element signature="e#1723#1735#0" expanded="true" />
+            <element signature="e#1957#1969#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/FloatTemplate.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9180">
+          <caret line="510" column="26" lean-forward="false" selection-start-line="510" selection-start-column="26" selection-end-line="510" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FastMath.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="31" lean-forward="false" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
+          <folding>
+            <element signature="e#56#68#0" expanded="true" />
+            <element signature="e#177#189#0" expanded="true" />
+            <element signature="e#298#310#0" expanded="true" />
+            <element signature="e#421#433#0" expanded="true" />
+            <element signature="e#544#556#0" expanded="true" />
+            <element signature="e#631#643#0" expanded="true" />
+            <element signature="e#720#732#0" expanded="true" />
+            <element signature="e#823#835#0" expanded="true" />
+            <element signature="e#926#938#0" expanded="true" />
+            <element signature="e#1033#1045#0" expanded="true" />
+            <element signature="e#1124#1136#0" expanded="true" />
+            <element signature="e#1213#1225#0" expanded="true" />
+            <element signature="e#1304#1316#0" expanded="true" />
+            <element signature="e#1393#1405#0" expanded="true" />
+            <element signature="e#1488#1500#0" expanded="true" />
+            <element signature="e#1575#1587#0" expanded="true" />
+            <element signature="e#1662#1674#0" expanded="true" />
+            <element signature="e#1749#1761#0" expanded="true" />
+            <element signature="e#1836#1848#0" expanded="true" />
+            <element signature="e#1923#1935#0" expanded="true" />
+            <element signature="e#2010#2022#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FastMacros.h" />
     <entry file="file://$PROJECT_DIR$/BasicOp.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1710">
@@ -346,14 +415,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AVXDouble.h" />
-    <entry file="file://$PROJECT_DIR$/FastMacros.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" column="42" lean-forward="false" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/FastMacros.h" />
     <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -364,8 +426,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BasicOp.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="83" column="20" lean-forward="false" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
+        <state relative-caret-position="666">
+          <caret line="37" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
             <element signature="e#35#47#0" expanded="true" />
             <element signature="e#145#157#0" expanded="true" />
@@ -388,9 +450,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Floatx8.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DoubleX4.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/FastMath.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-486">
+        <state relative-caret-position="18">
           <caret line="18" column="31" lean-forward="false" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
           <folding>
             <element signature="e#56#68#0" expanded="true" />
@@ -420,8 +498,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FloatTemplate.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="510" column="26" lean-forward="false" selection-start-line="510" selection-start-column="26" selection-end-line="510" selection-end-column="26" />
+        <state relative-caret-position="647">
+          <caret line="119" column="4" lean-forward="false" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
           <folding />
         </state>
       </provider>
