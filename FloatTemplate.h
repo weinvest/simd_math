@@ -255,7 +255,7 @@ struct CLS_NAME
     [[gnu::always_inline]]
     static inline VAL_TYPE mantissa_bit(VAL_TYPE v)
     {
-        return _or(_and(v, MANT_BIT_MASK), MANT_COMP_MASK);
+        return _and(v, MANT_BIT_MASK);
     }
 
     //======= compare result can be used as first param of if_then_else
@@ -442,6 +442,42 @@ struct CLS_NAME
 
     VAL_TYPE log(VAL_TYPE v)
     {
+        static const VAL_TYPE const_ln2 = const_val(0.6931471805599453);
+        static const VAL_TYPE recip_odd_12 = const_val(2.0/23.0);
+        static const VAL_TYPE recip_odd_11 = const_val(2.0/21.0);
+        static const VAL_TYPE recip_odd_10 = const_val(2.0/19.0);
+        static const VAL_TYPE recip_odd_9 = const_val(2.0/17.0);
+        static const VAL_TYPE recip_odd_8 = const_val(2.0/15.0);
+        static const VAL_TYPE recip_odd_7 = const_val(2.0/13.0);
+        static const VAL_TYPE recip_odd_6 = const_val(2.0/11.0);
+        static const VAL_TYPE recip_odd_5 = const_val(2.0/9.0);
+        static const VAL_TYPE recip_odd_4 = const_val(2.0/7.0);
+        static const VAL_TYPE recip_odd_3 = const_val(2.0/5.0);
+        static const VAL_TYPE recip_odd_2 = const_val(2.0/3.0);
+        static const VAL_TYPE recip_odd_1 = const_val(2.0);
+
+        auto invalid_mask = less_than(x, VALUE_0);
+
+        auto e = base_bit(x);
+        auto x = mantissa_bit(x);
+        x = _or(x, VALUE_1);
+
+        auto xn1 = sub(x, VALUE_1);
+        auto xa1 = add(x, VALUE_1);
+        x = div(xn1, xa1);
+
+        auto z = mul(x,x);
+
+        auto y = BOOST_PP_CAT(recip_odd_, LOG_ITER_CNT);
+#define DO_TAYLOR_4_LOG(z, n, data) y=fuse_mul_add(y, z, BOOST_PP_CAT(recip_odd_, BOOST_PP_SUB(EXP_ITER_CNT, n)));
+        BOOST_PP_REPEAT(LOG_ITER_CNT, DO_TAYLOR_4_LOG, ~);
+#undef DO_TAYLOR_4_LOG
+
+        y = mul(y, x);
+        y = fuse_mul_add(e, *(v8sf*)_ps256_cephes_log_q3, y);
+
+        y = _or(y, invalid_mask); // negative arg will be NAN
+        return y;
 
     }
 
