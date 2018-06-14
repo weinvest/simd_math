@@ -10,12 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2fe1801d-6459-4589-94f9-296030228ccf" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/FastMacros.h" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/FloatTemplate.h" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/AVXDouble.h" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/BasicOp.h" afterPath="$PROJECT_DIR$/BasicOp.h" />
-      <change beforePath="$PROJECT_DIR$/FastMath.h" afterPath="$PROJECT_DIR$/FastMath.h" />
+      <change beforePath="$PROJECT_DIR$/FloatTemplate.h" afterPath="$PROJECT_DIR$/FloatTemplate.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -62,8 +58,8 @@
       <file leaf-file-name="FloatTemplate.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FloatTemplate.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7363">
-              <caret line="20" column="75" lean-forward="false" selection-start-line="20" selection-start-column="75" selection-end-line="20" selection-end-column="75" />
+            <state relative-caret-position="433">
+              <caret line="472" column="130" lean-forward="false" selection-start-line="472" selection-start-column="130" selection-end-line="472" selection-end-column="130" />
               <folding />
             </state>
           </provider>
@@ -128,6 +124,10 @@
       <find>MANT_COMP_MASK</find>
       <find>x_or</find>
       <find>clamp</find>
+      <find>mant</find>
+      <find>mantissa_bit</find>
+      <find>base_bit</find>
+      <find>LOG_ITER_CNT</find>
     </findStrings>
     <replaceStrings>
       <replace>static inline</replace>
@@ -233,12 +233,12 @@
       <option name="presentableId" value="Default" />
       <updated>1528783209985</updated>
       <workItem from="1528783211155" duration="18490000" />
-      <workItem from="1528852081032" duration="24448000" />
+      <workItem from="1528852081032" duration="28258000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42938000" />
+    <option name="totallyTimeSpent" value="46748000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1985" y="-4" width="1855" height="1084" extended-state="6" />
@@ -421,8 +421,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FloatTemplate.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7363">
-          <caret line="20" column="75" lean-forward="false" selection-start-line="20" selection-start-column="75" selection-end-line="20" selection-end-column="75" />
+        <state relative-caret-position="433">
+          <caret line="472" column="130" lean-forward="false" selection-start-line="472" selection-start-column="130" selection-end-line="472" selection-end-column="130" />
           <folding />
         </state>
       </provider>

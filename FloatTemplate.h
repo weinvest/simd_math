@@ -16,6 +16,7 @@
 #define INT_ELE_TYPE int64_t
 #define ITEM_COUNT 4
 #define EXP_ITER_CNT 11
+#define LOG_ITER_CNT 7
 #define EXPO_BIT_CNT 11
 #define MANT_BIT_CNT 52
 #define SIMDAPI(name, prefix, subfix) BOOST_PP_CAT(prefix, BOOST_PP_CAT(_##name,subfix))
@@ -469,8 +470,8 @@ struct CLS_NAME
         auto z = mul(x,x);
 
         auto y = BOOST_PP_CAT(recip_odd_, LOG_ITER_CNT);
-#define DO_TAYLOR_4_LOG(z, n, data) y=fuse_mul_add(y, z, BOOST_PP_CAT(recip_odd_, BOOST_PP_SUB(EXP_ITER_CNT, n)));
-        BOOST_PP_REPEAT(LOG_ITER_CNT, DO_TAYLOR_4_LOG, ~);
+#define DO_TAYLOR_4_LOG(z, n, data) y=fuse_mul_add(y, z, BOOST_PP_CAT(recip_odd_, BOOST_PP_SUB(LOG_ITER_CNT, BOOST_PP_ADD(n,1))));
+        BOOST_PP_REPEAT(BOOST_PP_SUB(LOG_ITER_CNT,1), DO_TAYLOR_4_LOG, ~);
 #undef DO_TAYLOR_4_LOG
 
         y = mul(y, x);
@@ -512,13 +513,13 @@ struct CLS_NAME
         auto x1 = mul(mul(x, s), sig);
 
         // A&S formula 7.1.26
-        auto t = div(one, fuse_mul_add(p, x, one));
-        auto y = sub(one,
+        auto t = div(VALUE_1, fuse_mul_add(p, x, VALUE_1));
+        auto y = sub(VALUE_1,
                      mul(mul(fuse_mul_add(fuse_mul_add(fuse_mul_add(fuse_mul_add(a5, t, a4), t, a3), t, a2), t, a1), t),
                          exp(-mul(x, x))));
         //double y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*exp(-x*x);
 
-        return mul(half, fuse_mul_add(sig, y, one));
+        return mul(VALUE_0p5, fuse_mul_add(sig, y, VALUE_1));
     }
 
 };
