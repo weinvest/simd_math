@@ -1,6 +1,29 @@
 #include "BasicOp.h"
 namespace fast_math
 {
+    template <typename T>
+    inline T fuse_mul_add(T a, T b, T c)
+    {
+        return T::fuse_mul_add(a, b, c);
+    }
+
+    template <typename T>
+    inline T fuse_mul_sub(T a, T b, T c)
+    {
+        return T::fuse_mul_sub(a, b, c);
+    }
+
+    template <typename T>
+    inline T fuse_nmul_add(T a, T b, T c)
+    {
+        return T::fuse_nmul_add(a, b, c);
+    }
+
+    template <typename T>
+    inline T fuse_nmul_sub(T a, T b, T c)
+    {
+        return T::fuse_nmul_sub(a, b, c);
+    }
 
     template <typename T>
     inline T abs(T v)

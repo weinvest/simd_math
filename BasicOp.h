@@ -79,7 +79,7 @@ namespace fast_math
     }
 
     template <typename T>
-    inline T operator! (T v)
+    inline T operator~ (T v)
     {
         return T::_not(v);
     }
