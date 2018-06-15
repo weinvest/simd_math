@@ -4,126 +4,126 @@ namespace fast_math
     template <typename T>
     inline T fuse_mul_add(T a, T b, T c)
     {
-        return T::fuse_mul_add(a, b, c);
+        return T(T::fuse_mul_add(a.v, b.v, c.v));
     }
 
     template <typename T>
     inline T fuse_mul_sub(T a, T b, T c)
     {
-        return T::fuse_mul_sub(a, b, c);
+        return T(T::fuse_mul_sub(a.v, b.v, c.v));
     }
 
     template <typename T>
     inline T fuse_nmul_add(T a, T b, T c)
     {
-        return T::fuse_nmul_add(a, b, c);
+        return T(T::fuse_nmul_add(a.v, b.v, c.v));
     }
 
     template <typename T>
     inline T fuse_nmul_sub(T a, T b, T c)
     {
-        return T::fuse_nmul_sub(a, b, c);
+        return T(T::fuse_nmul_sub(a.v, b.v, c.v));
     }
 
     template <typename T>
     inline T abs(T v)
     {
-        return T::abs(v);
+        return T(T::abs(v.v));
     }
 
     template <typename T>
     inline T sign(T v)
     {
-        return T::sign(v);
+        return T(T::sign(v.v));
     }
 
     template <typename T>
     inline T min(T lhs, T rhs)
     {
-        return T::min(lhs, rhs);
+        return T(T::min(lhs.v, rhs.v));
     }
 
     template <typename T>
     inline T max(T lhs, T rhs)
     {
-        return T::max(lhs, rhs);
+        return T(T::max(lhs.v, rhs.v));
     }
 
     template <typename T>
     inline T clamp(T v, T a, T b)
     {
-        return T::clamp(v, a, b);
+        return T(T::clamp(v.v, a.v, b.v));
     }
 
     template <typename T>
     inline T floor(T v)
     {
-        return T::floor(v);
+        return T(T::floor(v.v));
     }
 
     template <typename T>
     inline T ceil(T v)
     {
-        return T::ceil(v);
+        return T(T::ceil(v.v));
     }
 
     template <typename T>
     inline T round(T v)
     {
-        return T::round(v);
+        return T(T::round(v.v));
     }
 
     template <typename T>
     inline T sqrt(T v)
     {
-        return T::sqrt(v);
+        return T(T::sqrt(v.v));
     }
 
     template <typename T>
     inline T pow(T v, T e)
     {
-        return T::pow(v, e);
+        return T(T::pow(v.v, e.v));
     }
 
     template <typename T>
     inline T exp(T v)
     {
-        return T::exp(v);
+        return T(T::exp(v.v));
     }
 
     template <typename T>
     inline T log(T v)
     {
-        return T::log(v);
+        return T(T::log(v.v));
     }
 
     template <typename T>
     inline T sin(T v)
     {
-        return T::sin(v);
+        return T(T::sin(v.v));
     }
 
     template <typename T>
     inline T cos(T v)
     {
-        return T::cos(v);
+        return T(T::cos(v.v));
     }
 
     template <typename T>
     inline T cdf(T v)
     {
-        return T::cdf(v);
+        return T(T::cdf(v.v));
     }
 
     template <typename T>
     inline T pdf(T v)
     {
-        return T::pdf(v);
+        return T(T::pdf(v.v));
     }
 
     template <typename T>
     inline T if_then_else(T pred, T s1, T s2)
     {
-        return T::if_then_else(pred, s1, s2);
+        return T(T::if_then_else(pred.v, s1.v, s2.v));
     }
 }
