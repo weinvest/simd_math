@@ -19,6 +19,9 @@
 #define INTAPI_SUBFIX _epi64
 
 #define CONVERT_2_INT cvtpd_
+
+#define _MANT_BIT_MASK_ 2.22507e-308
+
 #define RECIP_MAGIC_NUMBER 0x5FE6EB50C7B537A9
 #include "FloatTemplate.h"
 

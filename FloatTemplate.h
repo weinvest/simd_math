@@ -12,31 +12,22 @@
 [[gnu::always_inline]]
 static inline constexpr VAL_TYPE const_val(VAL_ELE_TYPE v)
 {
-    union{VAL_TYPE v; struct {VAL_ELE_TYPE v1, v2, v3, v4;}vv;} k= {v, v, v, v};
-    return k.v;
-}
-
-[[gnu::always_inline]]
-static inline constexpr VAL_TYPE const_val(INT_ELE_TYPE srep)
-{
-    union { INT_ELE_TYPE r; VAL_ELE_TYPE v;} k = {srep};
-    return const_val(k.v);
+    return VAL_TYPE{v, v, v, v};
 }
 
 [[gnu::always_inline]]
 static inline constexpr INT_VAL_TYPE const_rep(INT_ELE_TYPE srep)
 {
-    union{INT_VAL_TYPE v; struct {INT_ELE_TYPE v1, v2, v3, v4;}vv;} k = {srep, srep, srep, srep};
-    return k.v;
+    return INT_VAL_TYPE{srep, srep, srep, srep};
 }
+
 
 [[gnu::always_inline]]
-static inline constexpr VAL_ELE_TYPE const_single_val(INT_ELE_TYPE rep)
+static inline constexpr VAL_TYPE rep_2_val(INT_ELE_TYPE srep)
 {
-    union { INT_ELE_TYPE r; VAL_ELE_TYPE v;} k = {rep};
-    return k.v;
+    auto rep = const_rep(srep);
+    return (VAL_TYPE)rep;
 }
-
 
 struct CLS_NAME
 {
@@ -103,18 +94,18 @@ struct CLS_NAME
     static constexpr VAL_TYPE CONST_inf = const_val(SINGLE_INF_VALUE);
 
 
-    static constexpr VAL_TYPE CONST_true = const_val(-1L);
+    static constexpr VAL_TYPE CONST_true = rep_2_val(-1L);
     static constexpr VAL_TYPE CONST_false = CONST_0;
 
-    static constexpr VAL_TYPE SIGN_BIT_MASK = const_val(-0.0);
-    static constexpr VAL_TYPE EXPO_BIT_MASK = const_val(SINGLE_INF_VALUE);
-    static constexpr VAL_TYPE MANT_BIT_MASK = const_val(SINGLE_MANT_BIT_MASK);
+    static constexpr VAL_TYPE SIGN_BIT_MASK = rep_2_val(SINGLE_SIGN_BIT_MASK);
+    static constexpr VAL_TYPE EXPO_BIT_MASK = rep_2_val(SINGLE_EXPO_BIT_MASK);
+    static constexpr VAL_TYPE MANT_BIT_MASK = rep_2_val(SINGLE_MANT_BIT_MASK);
 
-    static constexpr VAL_TYPE INV_SIGN_BIT_MASK = const_val(~SINGLE_SIGN_BIT_MASK);
-    static constexpr VAL_TYPE INV_EXPO_BIT_MASK = const_val(~SINGLE_EXPO_BIT_MASK);
-    static constexpr VAL_TYPE INV_MANT_BIT_MASK = const_val(-SINGLE_INF_VALUE);
+    static constexpr VAL_TYPE INV_SIGN_BIT_MASK = rep_2_val(~SINGLE_SIGN_BIT_MASK);
+    static constexpr VAL_TYPE INV_EXPO_BIT_MASK = rep_2_val(~SINGLE_EXPO_BIT_MASK);
+    static constexpr VAL_TYPE INV_MANT_BIT_MASK = rep_2_val(-SINGLE_MANT_BIT_MASK);
 
-    static constexpr INT_VAL_TYPE BIAS = 1U << (EXPO_BIT_CNT-1);
+    static constexpr INT_VAL_TYPE BIAS = const_rep(1U << (EXPO_BIT_CNT-1));
 
     //==== load store =========
     [[gnu::always_inline]]
