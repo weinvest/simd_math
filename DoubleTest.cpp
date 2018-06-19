@@ -9,8 +9,8 @@
 constexpr size_t VECTOR_LEN = 1UL<<16;
 constexpr size_t ALIGN = 32;
 constexpr size_t ITER_COUNT = 10000;
-constexpr float F_EPSILON = 1e-6;
-constexpr float D_EPSILON = 1e-12;
+constexpr double F_EPSILON = 1e-6;
+constexpr double D_EPSILON = 1e-12;
 using namespace fast_math;
 class AVXDoubleTest : public ::testing::Test {
 private:
@@ -21,15 +21,15 @@ private:
 
 protected:
     virtual void TearDown() {
-        free(inputData_);
-        free(nativeResult_);
-        free(fastResult_);
+        //free(inputData_);
+        //free(nativeResult_);
+        //free(fastResult_);
     }
 
     virtual void SetUp() {
-        allocMemory(&inputData_);
-        allocMemory(&nativeResult_);
-        allocMemory(&fastResult_);
+        if(nullptr == inputData_) allocMemory(&inputData_);
+        if(nullptr == nativeResult_) allocMemory(&nativeResult_);
+        if(nullptr == fastResult_) allocMemory(&fastResult_);
 
         std::random_device dev;
         std::mt19937_64 eng;
@@ -42,20 +42,23 @@ protected:
         }
     }
 
-    double* inputData_;
-    double* nativeResult_;
-    double* fastResult_;
+    static double* inputData_;
+    static double* nativeResult_;
+    static double* fastResult_;
 };
+double* AVXDoubleTest::inputData_ = nullptr;
+double* AVXDoubleTest::nativeResult_ = nullptr;
+double* AVXDoubleTest::fastResult_ = nullptr;
 
 #define TEST_SIMD(func)\
 TEST_F(AVXDoubleTest, fast_##func) {\
     for (size_t i = 0; i < ITER_COUNT; ++i) {\
         Doublex4 tmp;\
         Doublex4 ipt;\
-        for (size_t j = 0; j < VECTOR_LEN; j+= 8) {\
+        for (size_t j = 0; j < VECTOR_LEN; j+= Doublex4::STEP_CNT) {\
             ipt.load(inputData_ + j);\
             tmp = func(ipt);\
-            tmp.store(fastResult_);\
+            tmp.store(fastResult_ + j);\
         }\
     }\
 \
@@ -67,8 +70,8 @@ TEST_F(AVXDoubleTest, fast_##func) {\
 #define TEST_NAIVE(func)\
 TEST_F(AVXDoubleTest, naive_##func) {\
     for (size_t i = 0; i < ITER_COUNT; ++i) {\
-        float ipt;\
-        float tmp;\
+        double ipt;\
+        double tmp;\
         for (size_t j = 0; j < VECTOR_LEN; j+= 1) {\
             ipt = inputData_[j];\
             tmp = std::func(ipt);\

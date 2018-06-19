@@ -33,9 +33,10 @@ static inline constexpr VAL_TYPE rep_2_val(INT_ELE_TYPE srep)
 static inline INT_VAL_TYPE convert_2_int(VAL_TYPE v)
 {
 #ifndef SLOW_CONVERT
-    SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(v);
+    return SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(v);
 #else
-    _mm256_cvtepi32_epi64(_mm256_cvtpd_epi32(v));
+    auto v1 = _mm256_cvtpd_epi32(v);
+    return _mm256_cvtepi32_epi64(v1);
 #endif
 }
 struct CLS_NAME

@@ -2,6 +2,7 @@
 #include <random>
 #include <cmath>
 #include <iostream>
+//#include "Floatx8.h"
 #include "Floatx8.h"
 #include "FastMath.h"
 
@@ -9,7 +10,6 @@ constexpr size_t VECTOR_LEN = 1UL<<16;
 constexpr size_t ALIGN = 32;
 constexpr size_t ITER_COUNT = 10000;
 constexpr float F_EPSILON = 1e-6;
-constexpr float D_EPSILON = 1e-12;
 using namespace fast_math;
 class AVXFloatTest : public ::testing::Test {
 private:
@@ -20,15 +20,15 @@ private:
 
 protected:
     virtual void TearDown() {
-        free(inputData_);
-        free(nativeResult_);
-        free(fastResult_);
+        //free(inputData_);
+        //free(nativeResult_);
+        //free(fastResult_);
     }
 
     virtual void SetUp() {
-        allocMemory(&inputData_);
-        allocMemory(&nativeResult_);
-        allocMemory(&fastResult_);
+        if(nullptr == inputData_) allocMemory(&inputData_);
+        if(nullptr == nativeResult_) allocMemory(&nativeResult_);
+        if(nullptr == fastResult_) allocMemory(&fastResult_);
 
         std::random_device dev;
         std::mt19937_64 eng;
@@ -41,25 +41,28 @@ protected:
         }
     }
 
-    float* inputData_;
-    float* nativeResult_;
-    float* fastResult_;
+    static float* inputData_;
+    static float* nativeResult_;
+    static float* fastResult_;
 };
+float* AVXFloatTest::inputData_ = nullptr;
+float* AVXFloatTest::nativeResult_ = nullptr;
+float* AVXFloatTest::fastResult_ = nullptr;
 
 #define TEST_SIMD(func)\
 TEST_F(AVXFloatTest, fast_##func) {\
     for (size_t i = 0; i < ITER_COUNT; ++i) {\
         Floatx8 tmp;\
         Floatx8 ipt;\
-        for (size_t j = 0; j < VECTOR_LEN; j+= 8) {\
+        for (size_t j = 0; j < VECTOR_LEN; j+= Floatx8::STEP_CNT) {\
             ipt.load(inputData_ + j);\
             tmp = func(ipt);\
-            tmp.store(fastResult_);\
+            tmp.store(fastResult_ + j);\
         }\
     }\
 \
     for (size_t i = 0; i < VECTOR_LEN; ++i) {\
-        ASSERT_NEAR(fastResult_[i], nativeResult_[i], D_EPSILON);\
+        ASSERT_NEAR(fastResult_[i], nativeResult_[i], F_EPSILON);\
     }\
 }
 
@@ -76,7 +79,7 @@ TEST_F(AVXFloatTest, naive_##func) {\
     }\
 \
     for (size_t i = 0; i < VECTOR_LEN; ++i) {\
-        ASSERT_NEAR(nativeResult_[i], nativeResult_[i], D_EPSILON);\
+        ASSERT_NEAR(nativeResult_[i], nativeResult_[i], F_EPSILON);\
     }\
 }
 
