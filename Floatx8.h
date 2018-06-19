@@ -15,7 +15,7 @@
 #define MAN_BIT_COUNT 23
 
 #define API_PREFIX _mm256
-#define API_SUBFIX _pd
+#define API_SUBFIX _ps
 #define INTAPI_SUBFIX _epi32
 
 #define CONVERT_2_INT cvtps
@@ -38,6 +38,5 @@
 #undef INTAPI_SUBFIX
 #undef CONVERT_2_INT
 #undef RECIP_MAGIC_NUMBER
-#endif
 
 #endif

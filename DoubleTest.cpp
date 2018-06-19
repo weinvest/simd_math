@@ -12,7 +12,7 @@ constexpr size_t ITER_COUNT = 10000;
 constexpr float F_EPSILON = 1e-6;
 constexpr float D_EPSILON = 1e-12;
 using namespace fast_math;
-class AVXMathfunTest : public ::testing::Test {
+class AVXDoubleTest : public ::testing::Test {
 private:
     template <typename T>
     inline int allocMemory(T** data) {
@@ -34,10 +34,10 @@ protected:
         std::random_device dev;
         std::mt19937_64 eng;
         eng.seed(dev());
-        std::uniform_real_distribution<float> distribution(0, 1);
+        std::uniform_real_distribution<double> distribution(0, 1);
 
         for (size_t i = 0; i < VECTOR_LEN; ++i) {
-            float tmp = distribution(eng);
+            double tmp = distribution(eng);
             inputData_[i] = tmp;
         }
     }
@@ -48,7 +48,7 @@ protected:
 };
 
 #define TEST_SIMD(func)\
-TEST_F(AVXMathfunTest, fast_##func) {\
+TEST_F(AVXDoubleTest, fast_##func) {\
     for (size_t i = 0; i < ITER_COUNT; ++i) {\
         Doublex4 tmp;\
         Doublex4 ipt;\
@@ -65,7 +65,7 @@ TEST_F(AVXMathfunTest, fast_##func) {\
 }
 
 #define TEST_NAIVE(func)\
-TEST_F(AVXMathfunTest, naive_##func) {\
+TEST_F(AVXDoubleTest, naive_##func) {\
     for (size_t i = 0; i < ITER_COUNT; ++i) {\
         float ipt;\
         float tmp;\

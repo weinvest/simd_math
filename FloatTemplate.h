@@ -7,7 +7,7 @@
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
-#define SIMDAPI(name, prefix, subfix) BOOST_PP_CAT(prefix, BOOST_PP_CAT(_##name,subfix))
+#define SIMDAPI(name, prefix, subfix) BOOST_PP_CAT(prefix, BOOST_PP_CAT(BOOST_PP_CAT(_, name),subfix))
 
 [[gnu::always_inline]]
 static inline constexpr VAL_TYPE const_val(VAL_ELE_TYPE v)
@@ -33,7 +33,7 @@ static inline constexpr VAL_TYPE rep_2_val(INT_ELE_TYPE srep)
 static inline INT_VAL_TYPE convert_2_int(VAL_TYPE v)
 {
 #ifndef SLOW_CONVERT
-    SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(fx);
+    SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(v);
 #else
     _mm256_cvtepi32_epi64(_mm256_cvtpd_epi32(v));
 #endif
@@ -114,7 +114,7 @@ struct CLS_NAME
     static constexpr VAL_TYPE INV_EXPO_BIT_MASK = rep_2_val(~SINGLE_EXPO_BIT_MASK);
     static constexpr VAL_TYPE INV_MANT_BIT_MASK = rep_2_val(-SINGLE_MANT_BIT_MASK);
 
-    static constexpr INT_VAL_TYPE BIAS = const_rep(1U << (EXPO_BIT_CNT-1));
+    static constexpr INT_VAL_TYPE BIAS = const_rep((1U << (EXPO_BIT_CNT-1))-1);
 
     //==== load store =========
     [[gnu::always_inline]]
