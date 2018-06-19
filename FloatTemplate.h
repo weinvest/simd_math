@@ -29,6 +29,15 @@ static inline constexpr VAL_TYPE rep_2_val(INT_ELE_TYPE srep)
     return (VAL_TYPE)rep;
 }
 
+[[gnu::always_inline]]
+static inline INT_VAL_TYPE convert_2_int(VAL_TYPE v)
+{
+#ifndef SLOW_CONVERT
+    SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(fx);
+#else
+    _mm256_cvtepi32_epi64(_mm256_cvtpd_epi32(v));
+#endif
+}
 struct CLS_NAME
 {
     VAL_TYPE v;
@@ -412,7 +421,7 @@ struct CLS_NAME
     static VAL_TYPE exp(VAL_TYPE x)
     {
         static const VAL_TYPE const_max_param = const_val(std::log(SINGLE_MAX_VALUE));
-        static const VAL_TYPE const_min_param = const_val(-std::log(SINGLE_MAX_VALUE));
+        static const VAL_TYPE const_min_param = const_val(std::log(SINGLE_MIN_NORM_VALUE));
 
         static const VAL_TYPE recip_ln2 = const_val(1.44269504088896341);
         static const VAL_TYPE const_ln2 = const_val(0.6931471805599453);
@@ -448,7 +457,7 @@ struct CLS_NAME
 #undef DO_TAYLOR_4_EXP
         /* build 2^n */
 
-        INT_VAL_TYPE imm0 = SIMDAPI(cvttps, API_PREFIX, INTAPI_SUBFIX)(fx);
+        INT_VAL_TYPE imm0 = convert_2_int(fx);
         // another two AVX2 instructions
         imm0 = imm0 + BIAS;
         imm0 = shift_left(imm0, MANT_BIT_CNT);

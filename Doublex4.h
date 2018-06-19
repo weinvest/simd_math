@@ -18,9 +18,8 @@
 #define API_SUBFIX _pd
 #define INTAPI_SUBFIX _epi64
 
-#define CONVERT_2_INT cvtpd_
-
-#define _MANT_BIT_MASK_ 2.22507e-308
+#define CONVERT_2_INT cvtpd
+#define SLOW_CONVERT
 
 #define RECIP_MAGIC_NUMBER 0x5FE6EB50C7B537A9
 #include "FloatTemplate.h"
@@ -33,10 +32,11 @@
 #undef ITEM_COUNT
 #undef EXP_ITER_CNT
 #undef LOG_ITER_CNT
-#undef EXPO_BIT_CNT
-#undef MANT_BIT_CNT
+#undef EXP_BIT_COUNT
+#undef MAN_BIT_COUNT
 #undef API_PREFIX
 #undef API_SUBFIX
 #undef INTAPI_SUBFIX
-
+#undef CONVERT_2_INT
+#undef RECIP_MAGIC_NUMBER
 #endif
