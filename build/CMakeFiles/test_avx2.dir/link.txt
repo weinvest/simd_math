@@ -1,1 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/c++   -O3 -std=c++14 -march=native -mavx2 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/test_avx2.dir/DoubleTest.cpp.o CMakeFiles/test_avx2.dir/FloatTest.cpp.o  -o test_avx2 /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a -lpthread 

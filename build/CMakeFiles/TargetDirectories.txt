@@ -1,4 +1,0 @@
-/Users/shgli/src/simd_math/build/CMakeFiles/rebuild_cache.dir
-/Users/shgli/src/simd_math/build/CMakeFiles/edit_cache.dir
-/Users/shgli/src/simd_math/build/CMakeFiles/test_avx2.dir
-/Users/shgli/src/simd_math/build/CMakeFiles/test_avx.dir
