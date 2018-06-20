@@ -17,6 +17,7 @@
 #define API_PREFIX _mm256
 #define API_SUBFIX _ps
 #define INTAPI_SUBFIX _epi32
+#define INT_VEC_TYPE __v8si
 
 #define CONVERT_2_INT cvtps
 
@@ -36,6 +37,7 @@
 #undef API_PREFIX
 #undef API_SUBFIX
 #undef INTAPI_SUBFIX
+#undef INT_VEC_TYPE
 #undef CONVERT_2_INT
 #undef RECIP_MAGIC_NUMBER
 

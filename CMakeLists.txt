@@ -18,5 +18,4 @@ macro(add_test SIMD_Name)
     target_link_libraries(test_${SIMD_Name} pthread)
 endmacro()
 
-add_test(avx)
 add_test(avx2)

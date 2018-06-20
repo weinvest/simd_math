@@ -8,7 +8,7 @@
 #define INT_ELE_TYPE int64_t
 #define ITEM_COUNT 4
 
-#define EXP_ITER_CNT 11
+#define EXP_ITER_CNT 12
 #define LOG_ITER_CNT 7
 
 #define EXP_BIT_COUNT 11
@@ -17,6 +17,7 @@
 #define API_PREFIX _mm256
 #define API_SUBFIX _pd
 #define INTAPI_SUBFIX _epi64
+#define INT_VEC_TYPE __v4di
 
 #define CONVERT_2_INT cvtpd
 #define SLOW_CONVERT
@@ -37,6 +38,7 @@
 #undef API_PREFIX
 #undef API_SUBFIX
 #undef INTAPI_SUBFIX
+#undef INT_VEC_TYPE
 #undef CONVERT_2_INT
 #undef RECIP_MAGIC_NUMBER
 #endif

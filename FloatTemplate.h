@@ -6,19 +6,24 @@
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 
 #define SIMDAPI(name, prefix, subfix) BOOST_PP_CAT(prefix, BOOST_PP_CAT(BOOST_PP_CAT(_, name),subfix))
 
 [[gnu::always_inline]]
 static inline constexpr VAL_TYPE const_val(VAL_ELE_TYPE v)
 {
-    return VAL_TYPE{v, v, v, v};
+#define PARAM_V(z, n, d) BOOST_PP_COMMA_IF(n) v
+    return VAL_TYPE{BOOST_PP_REPEAT(ITEM_COUNT, PARAM_V, ~)};
+#undef PARAM_V
 }
 
 [[gnu::always_inline]]
 static inline constexpr INT_VAL_TYPE const_rep(INT_ELE_TYPE srep)
 {
-    return INT_VAL_TYPE{srep, srep, srep, srep};
+#define PARAM_V(z, n, d) BOOST_PP_COMMA_IF(n) srep
+    return (INT_VAL_TYPE)INT_VEC_TYPE{BOOST_PP_REPEAT(ITEM_COUNT, PARAM_V, ~)};
+#undef PARAM_V
 }
 
 
@@ -78,13 +83,13 @@ struct CLS_NAME
     static constexpr int32_t STEP_CNT = ITEM_COUNT;
 
 
-    static const INT_ELE_TYPE SINGLE_SIGN_BIT_MASK = 1UL << (sizeof(VAL_ELE_TYPE)*8-1);
-    static const INT_ELE_TYPE SINGLE_EXPO_BIT_MASK = ((1UL << EXPO_BIT_CNT) - 1) << MANT_BIT_CNT;
-    static const INT_ELE_TYPE SINGLE_MANT_BIT_MASK = ((1UL << MANT_BIT_CNT) - 1);
+    static constexpr INT_ELE_TYPE SINGLE_SIGN_BIT_MASK = 1UL << (sizeof(VAL_ELE_TYPE)*8-1);
+    static constexpr INT_ELE_TYPE SINGLE_EXPO_BIT_MASK = ((1UL << EXPO_BIT_CNT) - 1) << MANT_BIT_CNT;
+    static constexpr INT_ELE_TYPE SINGLE_MANT_BIT_MASK = ((1UL << MANT_BIT_CNT) - 1);
 
-    static const INT_ELE_TYPE SINGLE_MAX_VALUE_REP = (((1UL << EXPO_BIT_CNT) - 2) << MANT_BIT_CNT) | SINGLE_MANT_BIT_MASK;
-    static const INT_ELE_TYPE SINGLE_MIN_VALUE_REP = SINGLE_MAX_VALUE_REP | SINGLE_SIGN_BIT_MASK;
-    static const INT_ELE_TYPE SINGLE_MIN_NORM_VALUE_REP = (1UL << MANT_BIT_CNT);
+    static constexpr INT_ELE_TYPE SINGLE_MAX_VALUE_REP = (((1UL << EXPO_BIT_CNT) - 2) << MANT_BIT_CNT) | SINGLE_MANT_BIT_MASK;
+    static constexpr INT_ELE_TYPE SINGLE_MIN_VALUE_REP = SINGLE_MAX_VALUE_REP | SINGLE_SIGN_BIT_MASK;
+    static constexpr INT_ELE_TYPE SINGLE_MIN_NORM_VALUE_REP = (1UL << MANT_BIT_CNT);
 
     static constexpr VAL_ELE_TYPE SINGLE_MAX_VALUE = std::numeric_limits<VAL_ELE_TYPE>::max();
     static constexpr VAL_ELE_TYPE SINGLE_MIN_VALUE = -std::numeric_limits<VAL_ELE_TYPE>::max();

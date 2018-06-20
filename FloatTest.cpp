@@ -2,7 +2,6 @@
 #include <random>
 #include <cmath>
 #include <iostream>
-//#include "Floatx8.h"
 #include "Floatx8.h"
 #include "FastMath.h"
 
@@ -26,18 +25,21 @@ protected:
     }
 
     virtual void SetUp() {
-        if(nullptr == inputData_) allocMemory(&inputData_);
         if(nullptr == nativeResult_) allocMemory(&nativeResult_);
         if(nullptr == fastResult_) allocMemory(&fastResult_);
 
-        std::random_device dev;
-        std::mt19937_64 eng;
-        eng.seed(dev());
-        std::uniform_real_distribution<float> distribution(0, 1);
+        if(nullptr == inputData_)
+        {
+            allocMemory(&inputData_);
+            std::random_device dev;
+            std::mt19937_64 eng;
+            eng.seed(dev());
+            std::uniform_real_distribution<float> distribution(0, 1);
 
-        for (size_t i = 0; i < VECTOR_LEN; ++i) {
-            float tmp = distribution(eng);
-            inputData_[i] = tmp;
+            for (size_t i = 0; i < VECTOR_LEN; ++i) {
+                float tmp = distribution(eng);
+                inputData_[i] = tmp;
+            }
         }
     }
 
@@ -62,7 +64,11 @@ TEST_F(AVXFloatTest, fast_##func) {\
     }\
 \
     for (size_t i = 0; i < VECTOR_LEN; ++i) {\
+        if(std::abs(fastResult_[i] - nativeResult_[i]) >  F_EPSILON)\
+        {\
+            std::cerr << i << ":" << "exp^" << inputData_[i] << " = " << fastResult_[i] << "|" << nativeResult_[i] << "\n";\
         ASSERT_NEAR(fastResult_[i], nativeResult_[i], F_EPSILON);\
+        }\
     }\
 }
 
