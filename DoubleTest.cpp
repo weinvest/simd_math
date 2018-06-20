@@ -16,7 +16,7 @@ namespace oo {
     double cdf(double x) {
 #if 1
         static boost::math::normal_distribution<> normal(0.0, 1.0);
-        return boost::math::cdf(normal, v);
+        return boost::math::cdf(normal, x);
 #else
         static double a1 =  0.254829592;
         static double a2 = -0.284496736;
@@ -142,6 +142,10 @@ TEST_SIMD(pdf)
 
 TEST_NAIVE(cdf, oo)
 TEST_SIMD(cdf)
+
+TEST_NAIVE(sqrt, std)
+TEST_SIMD(sqrt)
+
 #if 0
 TEST_NAIVE(sin)
 TEST_SIMD(sin)

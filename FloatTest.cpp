@@ -113,6 +113,10 @@ TEST_SIMD(pdf)
 
 TEST_NAIVE(cdf, oo)
 TEST_SIMD(cdf)
+
+TEST_NAIVE(sqrt, std)
+TEST_SIMD(sqrt)
+
 #if 0
 TEST_NAIVE(sin)
 TEST_SIMD(sin)
