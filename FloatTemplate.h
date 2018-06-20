@@ -255,7 +255,7 @@ struct CLS_NAME
     static inline VAL_TYPE sign(VAL_TYPE v) {
         //>0 return 1
         //<0 return -1
-        static const VAL_TYPE BASE_BIT_MASK = const_val(((1UL << (EXPO_BIT_CNT-1)) - 1) << MANT_BIT_CNT);
+        static const VAL_TYPE BASE_BIT_MASK = const_val(1.0);
         return _or(_and(v, SIGN_BIT_MASK), BASE_BIT_MASK);
     }
 
@@ -465,7 +465,7 @@ struct CLS_NAME
 
         INT_VAL_TYPE imm0 = convert_2_int(fx);
         // another two AVX2 instructions
-        imm0 = imm0 + BIAS;
+        imm0 = SIMDAPI(add, API_PREFIX, INTAPI_SUBFIX)(imm0, BIAS);
         imm0 = shift_left(imm0, MANT_BIT_CNT);
         auto pow2n = SIMDAPI(castsi256, API_PREFIX, API_SUBFIX)(imm0);
         y = mul(y, pow2n);
@@ -541,7 +541,7 @@ struct CLS_NAME
         static const auto recip_sqrt_2pi = const_val(0.3989422804014327);
         v = mul(v, v);
         v = mul(v, CONST_m0p5);
-        return exp(v);
+        return mul(recip_sqrt_2pi, exp(v));
     }
 
     static VAL_TYPE cdf(VAL_TYPE x)
@@ -556,13 +556,18 @@ struct CLS_NAME
 
         // Save the sign of x
         auto sig = sign(x);
-        auto x1 = mul(mul(x, s), sig);
+        x = mul(abs(x), s);
 
         // A&S formula 7.1.26
         auto t = div(CONST_1, fuse_mul_add(p, x, CONST_1));
-        auto y = sub(CONST_1,
-                     mul(mul(fuse_mul_add(fuse_mul_add(fuse_mul_add(fuse_mul_add(a5, t, a4), t, a3), t, a2), t, a1), t),
-                         exp(-mul(x, x))));
+        auto z = exp(-mul(x, x));
+        auto y = a5;
+        y = fuse_mul_add(y, t, a4);
+        y = fuse_mul_add(y, t, a3);
+        y = fuse_mul_add(y, t, a2);
+        y = fuse_mul_add(y, t, a1);
+        y = mul(y, t);
+        y = fuse_nmul_add(y, z, CONST_1);
         //double y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*exp(-x*x);
 
         return mul(CONST_0p5, fuse_mul_add(sig, y, CONST_1));

@@ -4,12 +4,25 @@
 #include <iostream>
 #include "Floatx8.h"
 #include "FastMath.h"
+#include <boost/math/distributions/normal.hpp>
 
 constexpr size_t VECTOR_LEN = 1UL<<16;
 constexpr size_t ALIGN = 32;
 constexpr size_t ITER_COUNT = 10000;
 constexpr float F_EPSILON = 1e-6;
 using namespace fast_math;
+namespace oo {
+    float cdf(float v) {
+        static boost::math::normal_distribution<> normal(0.0, 1.0);
+        return boost::math::cdf(normal, v);
+    }
+
+    float pdf(float v) {
+        static boost::math::normal_distribution<> normal(0.0, 1.0);
+        return boost::math::pdf(normal, v);
+    }
+}
+
 class AVXFloatTest : public ::testing::Test {
 private:
     template <typename T>
@@ -72,14 +85,14 @@ TEST_F(AVXFloatTest, fast_##func) {\
     }\
 }
 
-#define TEST_NAIVE(func)\
+#define TEST_NAIVE(func, ns)\
 TEST_F(AVXFloatTest, naive_##func) {\
     for (size_t i = 0; i < ITER_COUNT; ++i) {\
         float ipt;\
         float tmp;\
         for (size_t j = 0; j < VECTOR_LEN; j+= 1) {\
             ipt = inputData_[j];\
-            tmp = std::func(ipt);\
+            tmp = ns::func(ipt);\
             nativeResult_[j] = tmp;\
         }\
     }\
@@ -89,14 +102,23 @@ TEST_F(AVXFloatTest, naive_##func) {\
     }\
 }
 
-TEST_NAIVE(exp)
+TEST_NAIVE(exp, std)
 TEST_SIMD(exp)
 
-TEST_NAIVE(log)
+TEST_NAIVE(log, std)
 TEST_SIMD(log)
 
+TEST_NAIVE(pdf, oo)
+TEST_SIMD(pdf)
+
+TEST_NAIVE(cdf, oo)
+TEST_SIMD(cdf)
+#if 0
 TEST_NAIVE(sin)
 TEST_SIMD(sin)
 
 TEST_NAIVE(cos)
 TEST_SIMD(cos)
+#endif
+
+
