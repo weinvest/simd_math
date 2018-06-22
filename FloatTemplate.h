@@ -65,11 +65,6 @@ struct CLS_NAME
     {}
 
     [[gnu::always_inline]]
-    CLS_NAME(INT_ELE_TYPE vv)
-            :CLS_NAME(*(VAL_ELE_TYPE*)&vv)
-    {}
-
-    [[gnu::always_inline]]
     CLS_NAME(VAL_TYPE vv)
             :v(vv)
     {}
@@ -96,6 +91,10 @@ struct CLS_NAME
     static constexpr VAL_ELE_TYPE SINGLE_MIN_NORM_VALUE = std::numeric_limits<VAL_ELE_TYPE>::min();
     static constexpr VAL_ELE_TYPE SINGLE_INF_VALUE = std::numeric_limits<VAL_ELE_TYPE>::infinity();
 
+    static constexpr VAL_TYPE CONST_m3 = const_val(-3.0);
+    static constexpr VAL_TYPE CONST_m2p5 = const_val(-2.5);
+    static constexpr VAL_TYPE CONST_m2 = const_val(-2.0);
+    static constexpr VAL_TYPE CONST_m1p5 = const_val(-1.5);
     static constexpr VAL_TYPE CONST_m1 = const_val(-1.0);
     static constexpr VAL_TYPE CONST_m0p5 = const_val(-0.5);
     static constexpr VAL_TYPE CONST_0 = const_val(0.0);
@@ -103,6 +102,9 @@ struct CLS_NAME
     static constexpr VAL_TYPE CONST_1 = const_val(1.0);
     static constexpr VAL_TYPE CONST_1p5 = const_val(1.5);
     static constexpr VAL_TYPE CONST_2 = const_val(2.0);
+    static constexpr VAL_TYPE CONST_2p5 = const_val(2.5);
+    static constexpr VAL_TYPE CONST_3 = const_val(3.0);
+
     static constexpr VAL_TYPE CONST_max = const_val(SINGLE_MAX_VALUE);
     static constexpr VAL_TYPE CONST_min = const_val(SINGLE_MIN_VALUE);
     static constexpr VAL_TYPE CONST_min_norm = const_val(SINGLE_MIN_NORM_VALUE);
@@ -276,11 +278,11 @@ struct CLS_NAME
     }
 
     [[gnu::always_inline]]
-    static inline VAL_TYPE base_bit(VAL_TYPE v)
+    static inline INT_VAL_TYPE base_bit(VAL_TYPE v)
     {
         auto base_rep = _and(v, EXPO_BIT_MASK);
-        auto result_rep = shift_right(*(INT_VAL_TYPE*)&base_rep, MANT_BIT_CNT) - BIAS;
-        return *(VAL_TYPE*)&result_rep;
+        auto result_rep = SIMDAPI(sub, API_PREFIX, INTAPI_SUBFIX)(shift_right(*(INT_VAL_TYPE*)&base_rep, MANT_BIT_CNT), BIAS);
+        return result_rep;
     }
 
     [[gnu::always_inline]]
@@ -507,7 +509,8 @@ struct CLS_NAME
 #undef DO_TAYLOR_4_LOG
 
         y = mul(y, x);
-        y = fuse_mul_add(e, const_ln2, y);
+        auto k = SIMDAPI(castsi256, API_PREFIX, API_SUBFIX)(e);
+        y = fuse_mul_add(k, const_ln2, y);
 
         y = _or(y, invalid_mask); // negative arg will be NAN
         return y;

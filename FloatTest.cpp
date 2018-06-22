@@ -23,6 +23,7 @@ namespace oo {
     }
 }
 
+
 class AVXFloatTest : public ::testing::Test {
 private:
     template <typename T>
