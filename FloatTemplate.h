@@ -44,6 +44,17 @@ static inline INT_VAL_TYPE convert_2_int(VAL_TYPE v)
     return _mm256_cvtepi32_epi64(v1);
 #endif
 }
+
+[[gnu::always_inline]]
+static inline VAL_TYPE int_2_val(INT_VAL_TYPE iv)
+{
+#ifndef SLOW_CONVERT
+    return SIMDAPI(CONVERT_FROM_INT, API_PREFIX, API_SUBFIX)(iv);
+#else
+    auto v1 = _mm256_extracti128_si256(iv, 0);
+    return _mm256_cvtepi32_pd(v1);
+#endif
+}
 struct CLS_NAME
 {
     VAL_TYPE v;
@@ -281,7 +292,7 @@ struct CLS_NAME
     static inline INT_VAL_TYPE base_bit(VAL_TYPE v)
     {
         auto base_rep = _and(v, EXPO_BIT_MASK);
-        auto result_rep = SIMDAPI(sub, API_PREFIX, INTAPI_SUBFIX)(shift_right(*(INT_VAL_TYPE*)&base_rep, MANT_BIT_CNT), BIAS);
+        auto result_rep = shift_right(*(INT_VAL_TYPE*)&base_rep, MANT_BIT_CNT);
         return result_rep;
     }
 
@@ -493,7 +504,7 @@ struct CLS_NAME
 
         auto invalid_mask = less_than(x, CONST_0);
 
-        auto e = base_bit(x);
+        auto e = SIMDAPI(sub, API_PREFIX, INTAPI_SUBFIX)(base_bit(x), BIAS);
         x = mantissa_bit(x);
         x = _or(x, CONST_1);
 
@@ -509,7 +520,7 @@ struct CLS_NAME
 #undef DO_TAYLOR_4_LOG
 
         y = mul(y, x);
-        auto k = SIMDAPI(castsi256, API_PREFIX, API_SUBFIX)(e);
+        auto k = int_2_val(e);
         y = fuse_mul_add(k, const_ln2, y);
 
         y = _or(y, invalid_mask); // negative arg will be NAN

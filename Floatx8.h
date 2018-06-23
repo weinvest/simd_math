@@ -20,6 +20,7 @@
 #define INT_VEC_TYPE __v8si
 
 #define CONVERT_2_INT cvtps
+#define CONVERT_FROM_INT cvtepi32
 
 #define RECIP_MAGIC_NUMBER 0x5F375A86
 #include "FloatTemplate.h"

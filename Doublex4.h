@@ -20,6 +20,7 @@
 #define INT_VEC_TYPE __v4di
 
 #define CONVERT_2_INT cvtpd
+#define CONVERT_FROM_INT cvtepi64
 #define SLOW_CONVERT
 
 #define RECIP_MAGIC_NUMBER 0x5FE6EB50C7B537A9
@@ -40,5 +41,6 @@
 #undef INTAPI_SUBFIX
 #undef INT_VEC_TYPE
 #undef CONVERT_2_INT
+#undef CONVERT_FROM_INT 
 #undef RECIP_MAGIC_NUMBER
 #endif

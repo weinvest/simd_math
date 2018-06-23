@@ -105,19 +105,19 @@ namespace fast_option{
     Float SVol(Float spot, Float volATM, Float slope, Float curv, Float sqrtTTM, Float ttm, Float lnUnder)
     {
         static const Float V_m2(-2.0);
-        static const Float V_0p25(0.25);
+        static const Float V_m0p5(-0.5);
         static const Float V_0p4(0.4);
         static const Float V_0(0.0);
         static const Float V_1(1.0);
         static const Float V_2(2.0);
         static const Float V_3(3.0);
-        static const Float V_24(24.0);
+        static const Float V_r12(1.0/12.0);
         static const Float V_5(5.0);
 
         auto v = curv / sqrtTTM;
         auto rho = V_m2 * slope / curv;
         auto m = fuse_nmul_add(V_3, rho*rho, V_2);
-        m = fuse_mul_add(V_0p25 * rho * v * volATM + (m / V_24 * v * v), ttm, V_1);
+        m = fuse_mul_add(slope * sqrtTTM * volATM - (V_r12 * m  * curv * curv), V_m0p5, V_1);
 
         auto z = v / volATM * m * lnUnder;
         auto y = fuse_mul_sub(V_2, rho, z);
@@ -300,7 +300,7 @@ double *OptionTest::mStrike = nullptr;
 
 TEST_F(OptionTest, naive_vol)
 {
-    for (size_t i = 0; i < ITER_COUNT; ++i) {
+    for (size_t i = 0; i < ITER_COUNT*100; ++i) {
         for (size_t j = 0; j < STRIKE_LEN; j+= 1) {
             mNaiveVol[j] = option::SVol(mSpot, mStrike[j], mVolATM, mSlope, mCurv, mTTM, mDiscount);
         }
@@ -313,7 +313,7 @@ TEST_F(OptionTest, naive_vol)
 
 TEST_F(OptionTest, fast_vol)
 {
-    for (size_t i = 0; i < ITER_COUNT; ++i) {
+    for (size_t i = 0; i < ITER_COUNT*100; ++i) {
         fast_option::Float spot(mSpot);
         fast_option::Float volATM(mVolATM);
         fast_option::Float slope(mSlope);
