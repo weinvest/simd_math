@@ -205,7 +205,7 @@ TEST_F(AVXDoubleTest, naive_##func) {\
     }\
 }
 
-#if 0
+#if 1
 TEST_NAIVE(exp, std)
 TEST_SIMD(exp)
 
