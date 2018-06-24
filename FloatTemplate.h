@@ -53,8 +53,10 @@ struct HELP_FUNC
     #ifndef SLOW_CONVERT
         return SIMDAPI(CONVERT_FROM_INT, API_PREFIX, API_SUBFIX)(iv);
     #else
-        auto v1 = _mm256_extracti128_si256(iv, 0);
-        return _mm256_cvtepi32_pd(v1);
+        static const auto i64_2_i32 = _mm256_set_epi32(0,0,0,0,6,4,2,0);
+        auto v1 = _mm256_permutevar8x32_epi32(iv, i64_2_i32);
+        auto v2 = _mm256_castsi256_si128(v1);
+        return _mm256_cvtepi32_pd(v2);
     #endif
     }
 };
