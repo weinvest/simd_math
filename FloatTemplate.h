@@ -9,52 +9,55 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
 #define SIMDAPI(name, prefix, subfix) BOOST_PP_CAT(prefix, BOOST_PP_CAT(BOOST_PP_CAT(_, name),subfix))
-
-[[gnu::always_inline]]
-static inline constexpr VAL_TYPE const_val(VAL_ELE_TYPE v)
+#define HELP_FUNC BOOST_PP_CAT(Help, CLS_NAME)
+struct HELP_FUNC
 {
-#define PARAM_V(z, n, d) BOOST_PP_COMMA_IF(n) v
-    return VAL_TYPE{BOOST_PP_REPEAT(ITEM_COUNT, PARAM_V, ~)};
-#undef PARAM_V
-}
-
-[[gnu::always_inline]]
-static inline constexpr INT_VAL_TYPE const_rep(INT_ELE_TYPE srep)
-{
-#define PARAM_V(z, n, d) BOOST_PP_COMMA_IF(n) srep
-    return (INT_VAL_TYPE)INT_VEC_TYPE{BOOST_PP_REPEAT(ITEM_COUNT, PARAM_V, ~)};
-#undef PARAM_V
-}
-
-
-[[gnu::always_inline]]
-static inline constexpr VAL_TYPE rep_2_val(INT_ELE_TYPE srep)
-{
-    auto rep = const_rep(srep);
-    return (VAL_TYPE)rep;
-}
-
-[[gnu::always_inline]]
-static inline INT_VAL_TYPE convert_2_int(VAL_TYPE v)
-{
-#ifndef SLOW_CONVERT
-    return SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(v);
-#else
-    auto v1 = _mm256_cvtpd_epi32(v);
-    return _mm256_cvtepi32_epi64(v1);
-#endif
-}
-
-[[gnu::always_inline]]
-static inline VAL_TYPE int_2_val(INT_VAL_TYPE iv)
-{
-#ifndef SLOW_CONVERT
-    return SIMDAPI(CONVERT_FROM_INT, API_PREFIX, API_SUBFIX)(iv);
-#else
-    auto v1 = _mm256_extracti128_si256(iv, 0);
-    return _mm256_cvtepi32_pd(v1);
-#endif
-}
+    [[gnu::always_inline]]
+    static inline constexpr VAL_TYPE const_val(VAL_ELE_TYPE v)
+    {
+    #define PARAM_V(z, n, d) BOOST_PP_COMMA_IF(n) v
+        return VAL_TYPE{BOOST_PP_REPEAT(ITEM_COUNT, PARAM_V, ~)};
+    #undef PARAM_V
+    }
+    
+    [[gnu::always_inline]]
+    static inline constexpr INT_VAL_TYPE const_rep(INT_ELE_TYPE srep)
+    {
+    #define PARAM_V(z, n, d) BOOST_PP_COMMA_IF(n) srep
+        return (INT_VAL_TYPE)INT_VEC_TYPE{BOOST_PP_REPEAT(ITEM_COUNT, PARAM_V, ~)};
+    #undef PARAM_V
+    }
+    
+    
+    [[gnu::always_inline]]
+    static inline constexpr VAL_TYPE rep_2_val(INT_ELE_TYPE srep)
+    {
+        auto rep = const_rep(srep);
+        return (VAL_TYPE)rep;
+    }
+    
+    [[gnu::always_inline]]
+    static inline INT_VAL_TYPE convert_2_int(VAL_TYPE v)
+    {
+    #ifndef SLOW_CONVERT
+        return SIMDAPI(CONVERT_2_INT, API_PREFIX, INTAPI_SUBFIX)(v);
+    #else
+        auto v1 = _mm256_cvtpd_epi32(v);
+        return _mm256_cvtepi32_epi64(v1);
+    #endif
+    }
+    
+    [[gnu::always_inline]]
+    static inline VAL_TYPE int_2_val(INT_VAL_TYPE iv)
+    {
+    #ifndef SLOW_CONVERT
+        return SIMDAPI(CONVERT_FROM_INT, API_PREFIX, API_SUBFIX)(iv);
+    #else
+        auto v1 = _mm256_extracti128_si256(iv, 0);
+        return _mm256_cvtepi32_pd(v1);
+    #endif
+    }
+};
 struct CLS_NAME
 {
     VAL_TYPE v;
@@ -67,7 +70,7 @@ struct CLS_NAME
 
     [[gnu::always_inline]]
     CLS_NAME(VAL_ELE_TYPE vv)
-            :v(const_val(vv))
+    :v(HELP_FUNC::const_val(vv))
     {}
 
     [[gnu::always_inline]]
@@ -102,38 +105,38 @@ struct CLS_NAME
     static constexpr VAL_ELE_TYPE SINGLE_MIN_NORM_VALUE = std::numeric_limits<VAL_ELE_TYPE>::min();
     static constexpr VAL_ELE_TYPE SINGLE_INF_VALUE = std::numeric_limits<VAL_ELE_TYPE>::infinity();
 
-    static constexpr VAL_TYPE CONST_m3 = const_val(-3.0);
-    static constexpr VAL_TYPE CONST_m2p5 = const_val(-2.5);
-    static constexpr VAL_TYPE CONST_m2 = const_val(-2.0);
-    static constexpr VAL_TYPE CONST_m1p5 = const_val(-1.5);
-    static constexpr VAL_TYPE CONST_m1 = const_val(-1.0);
-    static constexpr VAL_TYPE CONST_m0p5 = const_val(-0.5);
-    static constexpr VAL_TYPE CONST_0 = const_val(0.0);
-    static constexpr VAL_TYPE CONST_0p5 = const_val(0.5);
-    static constexpr VAL_TYPE CONST_1 = const_val(1.0);
-    static constexpr VAL_TYPE CONST_1p5 = const_val(1.5);
-    static constexpr VAL_TYPE CONST_2 = const_val(2.0);
-    static constexpr VAL_TYPE CONST_2p5 = const_val(2.5);
-    static constexpr VAL_TYPE CONST_3 = const_val(3.0);
+    static constexpr VAL_TYPE CONST_m3 = HELP_FUNC::const_val(-3.0);
+    static constexpr VAL_TYPE CONST_m2p5 = HELP_FUNC::const_val(-2.5);
+    static constexpr VAL_TYPE CONST_m2 = HELP_FUNC::const_val(-2.0);
+    static constexpr VAL_TYPE CONST_m1p5 = HELP_FUNC::const_val(-1.5);
+    static constexpr VAL_TYPE CONST_m1 = HELP_FUNC::const_val(-1.0);
+    static constexpr VAL_TYPE CONST_m0p5 = HELP_FUNC::const_val(-0.5);
+    static constexpr VAL_TYPE CONST_0 = HELP_FUNC::const_val(0.0);
+    static constexpr VAL_TYPE CONST_0p5 = HELP_FUNC::const_val(0.5);
+    static constexpr VAL_TYPE CONST_1 = HELP_FUNC::const_val(1.0);
+    static constexpr VAL_TYPE CONST_1p5 = HELP_FUNC::const_val(1.5);
+    static constexpr VAL_TYPE CONST_2 = HELP_FUNC::const_val(2.0);
+    static constexpr VAL_TYPE CONST_2p5 = HELP_FUNC::const_val(2.5);
+    static constexpr VAL_TYPE CONST_3 = HELP_FUNC::const_val(3.0);
 
-    static constexpr VAL_TYPE CONST_max = const_val(SINGLE_MAX_VALUE);
-    static constexpr VAL_TYPE CONST_min = const_val(SINGLE_MIN_VALUE);
-    static constexpr VAL_TYPE CONST_min_norm = const_val(SINGLE_MIN_NORM_VALUE);
-    static constexpr VAL_TYPE CONST_inf = const_val(SINGLE_INF_VALUE);
+    static constexpr VAL_TYPE CONST_max = HELP_FUNC::const_val(SINGLE_MAX_VALUE);
+    static constexpr VAL_TYPE CONST_min = HELP_FUNC::const_val(SINGLE_MIN_VALUE);
+    static constexpr VAL_TYPE CONST_min_norm = HELP_FUNC::const_val(SINGLE_MIN_NORM_VALUE);
+    static constexpr VAL_TYPE CONST_inf = HELP_FUNC::const_val(SINGLE_INF_VALUE);
 
 
-    static constexpr VAL_TYPE CONST_true = rep_2_val(-1L);
+    static constexpr VAL_TYPE CONST_true = HELP_FUNC::rep_2_val(-1L);
     static constexpr VAL_TYPE CONST_false = CONST_0;
 
-    static constexpr VAL_TYPE SIGN_BIT_MASK = rep_2_val(SINGLE_SIGN_BIT_MASK);
-    static constexpr VAL_TYPE EXPO_BIT_MASK = rep_2_val(SINGLE_EXPO_BIT_MASK);
-    static constexpr VAL_TYPE MANT_BIT_MASK = rep_2_val(SINGLE_MANT_BIT_MASK);
+    static constexpr VAL_TYPE SIGN_BIT_MASK = HELP_FUNC::rep_2_val(SINGLE_SIGN_BIT_MASK);
+    static constexpr VAL_TYPE EXPO_BIT_MASK = HELP_FUNC::rep_2_val(SINGLE_EXPO_BIT_MASK);
+    static constexpr VAL_TYPE MANT_BIT_MASK = HELP_FUNC::rep_2_val(SINGLE_MANT_BIT_MASK);
 
-    static constexpr VAL_TYPE INV_SIGN_BIT_MASK = rep_2_val(~SINGLE_SIGN_BIT_MASK);
-    static constexpr VAL_TYPE INV_EXPO_BIT_MASK = rep_2_val(~SINGLE_EXPO_BIT_MASK);
-    static constexpr VAL_TYPE INV_MANT_BIT_MASK = rep_2_val(-SINGLE_MANT_BIT_MASK);
+    static constexpr VAL_TYPE INV_SIGN_BIT_MASK = HELP_FUNC::rep_2_val(~SINGLE_SIGN_BIT_MASK);
+    static constexpr VAL_TYPE INV_EXPO_BIT_MASK = HELP_FUNC::rep_2_val(~SINGLE_EXPO_BIT_MASK);
+    static constexpr VAL_TYPE INV_MANT_BIT_MASK = HELP_FUNC::rep_2_val(-SINGLE_MANT_BIT_MASK);
 
-    static constexpr INT_VAL_TYPE BIAS = const_rep((1U << (EXPO_BIT_CNT-1))-1);
+    static constexpr INT_VAL_TYPE BIAS = HELP_FUNC::const_rep((1U << (EXPO_BIT_CNT-1))-1);
 
     //==== load store =========
     [[gnu::always_inline]]
@@ -258,7 +261,7 @@ struct CLS_NAME
     }
 
     [[gnu::always_inline]]
-    inline VAL_TYPE _not(VAL_TYPE v) {
+    static inline VAL_TYPE _not(VAL_TYPE v) {
         auto int_rep = ~rep(v);
         return *(VAL_TYPE*)&int_rep;
     }
@@ -268,7 +271,7 @@ struct CLS_NAME
     static inline VAL_TYPE sign(VAL_TYPE v) {
         //>0 return 1
         //<0 return -1
-        static const VAL_TYPE BASE_BIT_MASK = const_val(1.0);
+        static const VAL_TYPE BASE_BIT_MASK = HELP_FUNC::const_val(1.0);
         return _or(_and(v, SIGN_BIT_MASK), BASE_BIT_MASK);
     }
 
@@ -334,7 +337,7 @@ struct CLS_NAME
     }
 
     [[gnu::always_inline]]
-    static inline VAL_TYPE non_equal(VAL_TYPE first, VAL_TYPE second)
+    static inline VAL_TYPE not_equal(VAL_TYPE first, VAL_TYPE second)
     {
         return SIMDAPI(cmp, API_PREFIX, API_SUBFIX)(first, second, _CMP_NEQ_OQ);
     }
@@ -403,6 +406,8 @@ struct CLS_NAME
         return floor(add(v, CONST_0p5));
     }
 
+    //======sugar=================
+
     // ==== advance math ============
     [[gnu::always_inline]]
     static inline VAL_TYPE sqrt(VAL_TYPE v){
@@ -417,7 +422,7 @@ struct CLS_NAME
 
     [[gnu::always_inline]]
     static inline VAL_TYPE recip_sqrt_fast(VAL_TYPE v) {
-        static INT_VAL_TYPE recip_magic_number = const_rep(RECIP_MAGIC_NUMBER);
+        static INT_VAL_TYPE recip_magic_number = HELP_FUNC::const_rep(RECIP_MAGIC_NUMBER);
         auto vhalf = mul(CONST_0p5, v);
         auto i = *(INT_VAL_TYPE*)&v;
         i =  recip_magic_number - shift_right(i, 1); //float:0x5F375A86
@@ -439,27 +444,27 @@ struct CLS_NAME
 
     static VAL_TYPE exp(VAL_TYPE x)
     {
-        static const VAL_TYPE const_max_param = const_val(std::log(SINGLE_MAX_VALUE));
-        static const VAL_TYPE const_min_param = const_val(std::log(SINGLE_MIN_NORM_VALUE));
+        static const VAL_TYPE const_max_param = HELP_FUNC::const_val(std::log(SINGLE_MAX_VALUE));
+        static const VAL_TYPE const_min_param = HELP_FUNC::const_val(std::log(SINGLE_MIN_NORM_VALUE));
 
-        static const VAL_TYPE recip_ln2 = const_val(1.44269504088896341);
-        static const VAL_TYPE const_ln2 = const_val(0.6931471805599453);
+        static const VAL_TYPE recip_ln2 = HELP_FUNC::const_val(1.44269504088896341);
+        static const VAL_TYPE const_ln2 = HELP_FUNC::const_val(0.6931471805599453);
 
-        static const VAL_TYPE recip_factorial_16 = const_val(1.0/20922789888000.0);
-        static const VAL_TYPE recip_factorial_15 = const_val(1.0/1307674368000.0);
-        static const VAL_TYPE recip_factorial_14 = const_val(1.0/87178291200.0);
-        static const VAL_TYPE recip_factorial_13 = const_val(1.0/6227020800.0);
-        static const VAL_TYPE recip_factorial_12 = const_val(1.0/479001600.0);
-        static const VAL_TYPE recip_factorial_11 = const_val(1.0/39916800.0);
-        static const VAL_TYPE recip_factorial_10 = const_val(1.0/3628800.0);
-        static const VAL_TYPE recip_factorial_9 = const_val(1.0/362880.0);
-        static const VAL_TYPE recip_factorial_8 = const_val(1.0/40320.0);
-        static const VAL_TYPE recip_factorial_7 = const_val(1.0/5040.0);
-        static const VAL_TYPE recip_factorial_6 = const_val(1.0/720.0);
-        static const VAL_TYPE recip_factorial_5 = const_val(1.0/120.0);
-        static const VAL_TYPE recip_factorial_4 = const_val(1.0/24.0);
-        static const VAL_TYPE recip_factorial_3 = const_val(1.0/6.0);
-        static const VAL_TYPE recip_factorial_2 = const_val(1.0/2.0);
+        static const VAL_TYPE recip_factorial_16 = HELP_FUNC::const_val(1.0/20922789888000.0);
+        static const VAL_TYPE recip_factorial_15 = HELP_FUNC::const_val(1.0/1307674368000.0);
+        static const VAL_TYPE recip_factorial_14 = HELP_FUNC::const_val(1.0/87178291200.0);
+        static const VAL_TYPE recip_factorial_13 = HELP_FUNC::const_val(1.0/6227020800.0);
+        static const VAL_TYPE recip_factorial_12 = HELP_FUNC::const_val(1.0/479001600.0);
+        static const VAL_TYPE recip_factorial_11 = HELP_FUNC::const_val(1.0/39916800.0);
+        static const VAL_TYPE recip_factorial_10 = HELP_FUNC::const_val(1.0/3628800.0);
+        static const VAL_TYPE recip_factorial_9 = HELP_FUNC::const_val(1.0/362880.0);
+        static const VAL_TYPE recip_factorial_8 = HELP_FUNC::const_val(1.0/40320.0);
+        static const VAL_TYPE recip_factorial_7 = HELP_FUNC::const_val(1.0/5040.0);
+        static const VAL_TYPE recip_factorial_6 = HELP_FUNC::const_val(1.0/720.0);
+        static const VAL_TYPE recip_factorial_5 = HELP_FUNC::const_val(1.0/120.0);
+        static const VAL_TYPE recip_factorial_4 = HELP_FUNC::const_val(1.0/24.0);
+        static const VAL_TYPE recip_factorial_3 = HELP_FUNC::const_val(1.0/6.0);
+        static const VAL_TYPE recip_factorial_2 = HELP_FUNC::const_val(1.0/2.0);
         static const VAL_TYPE recip_factorial_1 = CONST_1;
         static const VAL_TYPE recip_factorial_0 = CONST_1;
 
@@ -476,7 +481,7 @@ struct CLS_NAME
 #undef DO_TAYLOR_4_EXP
         /* build 2^n */
 
-        INT_VAL_TYPE imm0 = convert_2_int(fx);
+        INT_VAL_TYPE imm0 = HELP_FUNC::convert_2_int(fx);
         // another two AVX2 instructions
         imm0 = SIMDAPI(add, API_PREFIX, INTAPI_SUBFIX)(imm0, BIAS);
         imm0 = shift_left(imm0, MANT_BIT_CNT);
@@ -488,19 +493,19 @@ struct CLS_NAME
 
     static VAL_TYPE log(VAL_TYPE x)
     {
-        static const VAL_TYPE const_ln2 = const_val(0.6931471805599453);
-        static const VAL_TYPE recip_odd_12 = const_val(2.0/23.0);
-        static const VAL_TYPE recip_odd_11 = const_val(2.0/21.0);
-        static const VAL_TYPE recip_odd_10 = const_val(2.0/19.0);
-        static const VAL_TYPE recip_odd_9 = const_val(2.0/17.0);
-        static const VAL_TYPE recip_odd_8 = const_val(2.0/15.0);
-        static const VAL_TYPE recip_odd_7 = const_val(2.0/13.0);
-        static const VAL_TYPE recip_odd_6 = const_val(2.0/11.0);
-        static const VAL_TYPE recip_odd_5 = const_val(2.0/9.0);
-        static const VAL_TYPE recip_odd_4 = const_val(2.0/7.0);
-        static const VAL_TYPE recip_odd_3 = const_val(2.0/5.0);
-        static const VAL_TYPE recip_odd_2 = const_val(2.0/3.0);
-        static const VAL_TYPE recip_odd_1 = const_val(2.0);
+        static const VAL_TYPE const_ln2 = HELP_FUNC::const_val(0.6931471805599453);
+        static const VAL_TYPE recip_odd_12 = HELP_FUNC::const_val(2.0/23.0);
+        static const VAL_TYPE recip_odd_11 = HELP_FUNC::const_val(2.0/21.0);
+        static const VAL_TYPE recip_odd_10 = HELP_FUNC::const_val(2.0/19.0);
+        static const VAL_TYPE recip_odd_9 = HELP_FUNC::const_val(2.0/17.0);
+        static const VAL_TYPE recip_odd_8 = HELP_FUNC::const_val(2.0/15.0);
+        static const VAL_TYPE recip_odd_7 = HELP_FUNC::const_val(2.0/13.0);
+        static const VAL_TYPE recip_odd_6 = HELP_FUNC::const_val(2.0/11.0);
+        static const VAL_TYPE recip_odd_5 = HELP_FUNC::const_val(2.0/9.0);
+        static const VAL_TYPE recip_odd_4 = HELP_FUNC::const_val(2.0/7.0);
+        static const VAL_TYPE recip_odd_3 = HELP_FUNC::const_val(2.0/5.0);
+        static const VAL_TYPE recip_odd_2 = HELP_FUNC::const_val(2.0/3.0);
+        static const VAL_TYPE recip_odd_1 = HELP_FUNC::const_val(2.0);
 
         auto invalid_mask = less_than(x, CONST_0);
 
@@ -520,7 +525,7 @@ struct CLS_NAME
 #undef DO_TAYLOR_4_LOG
 
         y = mul(y, x);
-        auto k = int_2_val(e);
+        auto k = HELP_FUNC::int_2_val(e);
         y = fuse_mul_add(k, const_ln2, y);
 
         y = _or(y, invalid_mask); // negative arg will be NAN
@@ -552,7 +557,7 @@ struct CLS_NAME
 
     static VAL_TYPE pdf(VAL_TYPE v)
     {
-        static const auto recip_sqrt_2pi = const_val(0.3989422804014327);
+        static const auto recip_sqrt_2pi = HELP_FUNC::const_val(0.3989422804014327);
         v = mul(v, v);
         v = mul(v, CONST_m0p5);
         return mul(recip_sqrt_2pi, exp(v));
@@ -560,13 +565,13 @@ struct CLS_NAME
 
     static VAL_TYPE cdf(VAL_TYPE x)
     {
-        static const auto a1 = const_val(0.254829592);
-        static const auto a2 = const_val(-0.284496736);
-        static const auto a3 = const_val(1.421413741);
-        static const auto a4 = const_val(-1.453152027);
-        static const auto a5 = const_val(1.061405429);
-        static const auto p = const_val(0.3275911);
-        static const auto s = const_val(0.7071067811865475);  //1.0/sqrt(2.0)
+        static const auto a1 = HELP_FUNC::const_val(0.254829592);
+        static const auto a2 = HELP_FUNC::const_val(-0.284496736);
+        static const auto a3 = HELP_FUNC::const_val(1.421413741);
+        static const auto a4 = HELP_FUNC::const_val(-1.453152027);
+        static const auto a5 = HELP_FUNC::const_val(1.061405429);
+        static const auto p = HELP_FUNC::const_val(0.3275911);
+        static const auto s = HELP_FUNC::const_val(0.7071067811865475);  //1.0/sqrt(2.0)
 
         // Save the sign of x
         auto sig = sign(x);
@@ -589,5 +594,89 @@ struct CLS_NAME
 
 };
 
-#undef SIMDAPI
+[[gnu::always_inline]]
+inline  CLS_NAME operator+ (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::add(lhs.v, rhs.v));
+}
 
+[[gnu::always_inline]]
+inline CLS_NAME operator- (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::sub(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator* (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::mul(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator/ (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::div(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator< (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::less_than(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator<= (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::less_equal(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator> (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::great_than(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator>= (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::great_equal(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator== (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::equal(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator!= (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::not_equal(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator& (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::_and(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator| (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::_or(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator^ (CLS_NAME lhs, CLS_NAME rhs)
+{
+    return CLS_NAME(CLS_NAME::_xor(lhs.v, rhs.v));
+}
+
+[[gnu::always_inline]]
+inline CLS_NAME operator~ (CLS_NAME v)
+{
+    return CLS_NAME(CLS_NAME::_not(v.v));
+}
+
+#undef SIMDAPI
+#undef HELP_FUNC

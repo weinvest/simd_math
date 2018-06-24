@@ -4,46 +4,16 @@
 #include <iostream>
 //#include "Floatx8.h"
 #include "Doublex4.h"
-#include "FastMath.h"
 #include <boost/math/distributions/normal.hpp>
 
 constexpr size_t VECTOR_LEN = 1UL<<16;
 constexpr size_t ALIGN = 32;
 constexpr size_t ITER_COUNT = 10000;
 constexpr double D_EPSILON = 1e-11;
-using namespace fast_math;
 namespace oo {
     double cdf(double x) {
-#if 1
         static boost::math::normal_distribution<> normal(0.0, 1.0);
         return boost::math::cdf(normal, x);
-#else
-        static double a1 =  0.254829592;
-        static double a2 = -0.284496736;
-        static double a3 =  1.421413741;
-        static double a4 = -1.453152027;
-        static double a5 =  1.061405429;
-        static double p  =  0.3275911;
-        static double s = sqrt(2.0);
-
-        // Save the sign of x
-        int sign = 1;
-        if (x < 0)
-        {
-            sign = -1;
-            x /= -s;
-        }
-        else
-        {
-            x /= s;
-        }
-
-        // A&S formula 7.1.26
-        double t = 1.0/(1.0 + p*x);
-        double y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*exp(-x*x);
-
-        return 0.5*(1.0 + sign*y);
-#endif
     }
 
     double pdf(double v) {
@@ -51,7 +21,6 @@ namespace oo {
         return boost::math::pdf(normal, v);
     }
 }
-
 
 namespace option{
     double SVol(double spot, double strike, double volATM, double s, double c, double t, double discount)
@@ -116,27 +85,27 @@ namespace fast_option{
 
         auto v = curv / sqrtTTM;
         auto rho = V_m2 * slope / curv;
-        auto m = fuse_nmul_add(V_3, rho*rho, V_2);
-        m = fuse_mul_add(slope * sqrtTTM * volATM - (V_r12 * m  * curv * curv), V_m0p5, V_1);
+        auto m = Float::fuse_nmul_add(V_3, rho*rho, V_2);
+        m = Float::fuse_mul_add(slope * sqrtTTM * volATM - (V_r12 * m  * curv * curv), V_m0p5, V_1);
 
         auto z = v / volATM * m * lnUnder;
-        auto y = fuse_mul_sub(V_2, rho, z);
-        y = fuse_nmul_add(y, z, V_1);
-        auto Xz = log((sqrt(y) + z - rho) / (V_1 - rho));
+        auto y = Float::fuse_mul_sub(V_2, rho, z);
+        y = Float::fuse_nmul_add(y, z, V_1);
+        auto Xz = Float::log((Float::sqrt(y) + z - rho) / (V_1 - rho));
 
         auto ratio = z / Xz;
-        ratio = clamp(ratio, V_0p4, V_5);
+        ratio = Float::clamp(ratio, V_0p4, V_5);
 
-        return if_then_else(V_0 == lnUnder, volATM, ratio*volATM);
+        return Float::if_then_else(V_0 == lnUnder, volATM, ratio*volATM);
     }
 
     Float bsCall(Float spot, Float presentStrike, Float impVol, Float sqrtTTM, Float lnUnder) //lnUnder=log(spot/presentStrike)
     {
         static const Float V_0p5(0.5);
         auto volTTM = impVol * sqrtTTM;
-        auto d1 = fuse_mul_add(V_0p5 * volTTM, volTTM, lnUnder) / volTTM;
+        auto d1 = Float::fuse_mul_add(V_0p5 * volTTM, volTTM, lnUnder) / volTTM;
         auto d2 = d1 - volTTM;
-        return fuse_mul_sub(spot, cdf(d1), presentStrike * cdf(d2));
+        return Float::fuse_mul_sub(spot, Float::cdf(d1), presentStrike * Float::cdf(d2));
     }
 
     Float bsPut(Float call, Float spot, Float presentStrike)
@@ -193,7 +162,7 @@ TEST_F(AVXDoubleTest, fast_##func) {\
         Doublex4 ipt;\
         for (size_t j = 0; j < VECTOR_LEN; j+= Doublex4::STEP_CNT) {\
             ipt.load(inputData_ + j);\
-            tmp = func(ipt);\
+            tmp = Doublex4::func(ipt);\
             tmp.store(fastResult_ + j);\
         }\
     }\
@@ -319,14 +288,14 @@ TEST_F(OptionTest, fast_vol)
         fast_option::Float slope(mSlope);
         fast_option::Float curv(mCurv);
         fast_option::Float ttm(mTTM);
-        fast_option::Float sqrtTTM = sqrt(ttm);
+        fast_option::Float sqrtTTM = fast_option::Float::sqrt(ttm);
         fast_option::Float discount(mDiscount);
         fast_option::Float vol;
         fast_option::Float strike;
         fast_option::Float lnUnder;
         for (size_t j = 0; j < STRIKE_LEN; j+= fast_option::Float::STEP_CNT) {
             strike.load(mStrike+j);
-            lnUnder = log(spot/(strike*discount));
+            lnUnder = fast_option::Float::log(spot/(strike*discount));
             vol = fast_option::SVol(spot, volATM, slope, curv, sqrtTTM, ttm, lnUnder);
             vol.store(mFastVol+j);
         }
@@ -337,3 +306,85 @@ TEST_F(OptionTest, fast_vol)
 //        ASSERT_NEAR(mNaiveVol[i], mFastVol[i], D_EPSILON);
     }
 }
+
+TEST_F(OptionTest, naive_call)
+{
+    for (size_t i = 0; i < ITER_COUNT*100; ++i) {
+        for (size_t j = 0; j < STRIKE_LEN; j+= 1) {
+            mNaiveCall[j] = option::bsCall(mSpot, mStrike[j], mNaiveVol[j], mTTM, 1.0, mDiscount);
+        }
+    }
+
+    for (size_t i = 0; i < STRIKE_LEN; ++i) {
+        ASSERT_NEAR(mNaiveCall[i], mNaiveCall[i], D_EPSILON);
+    }
+}
+
+TEST_F(OptionTest, fast_call)
+{
+    for (size_t i = 0; i < ITER_COUNT*100; ++i) {
+        fast_option::Float spot(mSpot);
+        fast_option::Float volATM(mVolATM);
+        fast_option::Float slope(mSlope);
+        fast_option::Float curv(mCurv);
+        fast_option::Float ttm(mTTM);
+        fast_option::Float sqrtTTM = fast_option::Float::sqrt(ttm);
+        fast_option::Float discount(mDiscount);
+        fast_option::Float vol;
+        fast_option::Float call;
+        fast_option::Float strike;
+        fast_option::Float presentStrike;
+        fast_option::Float lnUnder;
+        for (size_t j = 0; j < STRIKE_LEN; j+= fast_option::Float::STEP_CNT) {
+            strike.load(mStrike+j);
+            presentStrike = strike*discount;
+            lnUnder = fast_option::Float::log(spot/(presentStrike));
+            vol.load(mFastVol +j);
+            call = fast_option::bsCall(spot, presentStrike, vol, sqrtTTM, lnUnder);
+            call.store(mFastCall+j);
+        }
+    }
+
+    for (size_t i = 0; i < STRIKE_LEN; ++i) {
+        std::cout << std::setw(3) << i << ":" << std::setprecision(10) << mNaiveCall[i] << " " << mFastCall[i] << "\n";
+//        ASSERT_NEAR(mNaiveVol[i], mFastVol[i], D_EPSILON);
+    }
+}
+
+TEST_F(OptionTest, naive_put)
+{
+    for (size_t i = 0; i < ITER_COUNT*100; ++i) {
+        for (size_t j = 0; j < STRIKE_LEN; j+= 1) {
+            mNaivePut[j] = option::bsPut(mSpot, mStrike[j], mNaiveVol[j], mTTM, 1.0, mDiscount);
+        }
+    }
+
+    for (size_t i = 0; i < STRIKE_LEN; ++i) {
+        ASSERT_NEAR(mNaivePut[i], mNaivePut[i], D_EPSILON);
+    }
+}
+
+TEST_F(OptionTest, fast_put)
+{
+    for (size_t i = 0; i < ITER_COUNT*100; ++i) {
+        fast_option::Float spot(mSpot);
+        fast_option::Float discount(mDiscount);
+        fast_option::Float call;
+        fast_option::Float put;
+        fast_option::Float strike;
+        fast_option::Float presentStrike;
+        for (size_t j = 0; j < STRIKE_LEN; j+= fast_option::Float::STEP_CNT) {
+            strike.load(mStrike+j);
+            presentStrike = strike*discount;
+            call.load(mFastCall+j);
+            put = fast_option::bsPut(call, spot, presentStrike);
+            put.store(mFastPut+j);
+        }
+    }
+
+    for (size_t i = 0; i < STRIKE_LEN; ++i) {
+        std::cout << std::setw(3) << i << ":" << std::setprecision(10) << mNaivePut[i] << " " << mFastPut[i] << "\n";
+//        ASSERT_NEAR(mNaiveVol[i], mFastVol[i], D_EPSILON);
+    }
+}
+
