@@ -3,14 +3,12 @@
 #include <cmath>
 #include <iostream>
 #include "Floatx8.h"
-#include "FastMath.h"
 #include <boost/math/distributions/normal.hpp>
 
 constexpr size_t VECTOR_LEN = 1UL<<16;
 constexpr size_t ALIGN = 32;
 constexpr size_t ITER_COUNT = 10000;
 constexpr float F_EPSILON = 1e-6;
-using namespace fast_math;
 namespace oo {
     float cdf(float v) {
         static boost::math::normal_distribution<> normal(0.0, 1.0);
@@ -72,7 +70,7 @@ TEST_F(AVXFloatTest, fast_##func) {\
         Floatx8 ipt;\
         for (size_t j = 0; j < VECTOR_LEN; j+= Floatx8::STEP_CNT) {\
             ipt.load(inputData_ + j);\
-            tmp = func(ipt);\
+            tmp = Floatx8::func(ipt);\
             tmp.store(fastResult_ + j);\
         }\
     }\

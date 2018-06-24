@@ -192,7 +192,6 @@ TEST_F(AVXDoubleTest, naive_##func) {\
         ASSERT_NEAR(nativeResult_[i], nativeResult_[i], D_EPSILON);\
     }\
 }
-#if 0
 
 TEST_NAIVE(exp, std)
 TEST_SIMD(exp)
@@ -209,6 +208,7 @@ TEST_SIMD(cdf)
 TEST_NAIVE(sqrt, std)
 TEST_SIMD(sqrt)
 
+#if 0
 TEST_NAIVE(sin)
 TEST_SIMD(sin)
 
