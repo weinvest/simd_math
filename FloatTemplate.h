@@ -85,7 +85,8 @@ struct CLS_NAME
             :v(vv)
     {}
 
-    operator VAL_TYPE () const { return v; }
+    [[gnu::always_inline]]
+    inline operator VAL_TYPE () const { return v; }
 
 
     //==== const values ======
@@ -280,14 +281,14 @@ struct CLS_NAME
     [[gnu::always_inline]]
     static inline VAL_TYPE sign_bit(VAL_TYPE v) {
         //>0 return 0 (0x0000000000000000)
-        //<0 return -0(0x1000000000000000)
+        //<0 return -0(0x8000000000000000)
         //if_then_else(pref < 0, v1, v2) <=> if_then_else(sign_bit(pred), v1, v2)
         return _and(v, SIGN_BIT_MASK);
     }
 
     [[gnu::always_inline]]
     static inline VAL_TYPE rsign_bit(VAL_TYPE v) {
-        //>0 return -0 (0x1000000000000000)
+        //>0 return -0 (0x8000000000000000)
         //<0 return 0 (0x0000000000000000)
         //if_then_else(pref >= 0, v1, v2) <=> if_then_else(rsign_bit(pred), v1, v2)
         return and_not(v, SIGN_BIT_MASK);
