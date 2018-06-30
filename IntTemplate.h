@@ -93,7 +93,7 @@ struct CLS_NAME {
 
     [[gnu::always_inline]]
     static inline VAL_TYPE mul(VAL_TYPE v1, VAL_TYPE v2) {
-        return SIMDAPI(mul, API_PREFIX, API_SUBFIX)(v1, v2);
+        return SIMDAPI(mullo, API_PREFIX, API_SUBFIX)(v1, v2);
     }
 
     [[gnu::always_inline]]
