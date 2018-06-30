@@ -46,7 +46,17 @@ protected:
     int32_t *avxo_;
 };
 
-#define TEST_INTx4_BIN_OP(fun, naive_op)\
+namespace IntCompWraper
+{
+    AVXInt less_than(AVXInt a, AVXInt b) { return AVXInt::pred_2_num(AVXInt::less_than(a,b)); }
+    AVXInt less_equal(AVXInt a, AVXInt b) { return AVXInt::pred_2_num(AVXInt::less_equal(a,b)); }
+    AVXInt great_than(AVXInt a, AVXInt b) { return AVXInt::pred_2_num(AVXInt::great_than(a,b)); }
+    AVXInt great_equal(AVXInt a, AVXInt b) { return AVXInt::pred_2_num(AVXInt::great_equal(a,b)); }
+    AVXInt equal(AVXInt a, AVXInt b) { return AVXInt::pred_2_num(AVXInt::equal(a,b)); }
+    AVXInt not_equal(AVXInt a, AVXInt b) { return AVXInt::pred_2_num(AVXInt::not_equal(a,b)); }
+}
+
+#define TEST_INTx4_BIN_OP(ns, fun, naive_op)\
 TEST_F(AVXIntTest, test_##fun)\
 {\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -58,7 +68,7 @@ TEST_F(AVXIntTest, test_##fun)\
     {\
         a.load(input1_ + i);\
         b.load(input2_ + i);\
-        c = AVXInt::fun(a, b);\
+        c = ns::fun(a, b);\
         c.store(avxo_ + i);\
     }\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -67,7 +77,7 @@ TEST_F(AVXIntTest, test_##fun)\
     }\
 }
 
-#define TEST_INTx4_SIG_OP(fun, naive_op)\
+#define TEST_INTx4_SIG_OP(ns, fun, naive_op)\
 TEST_F(AVXIntTest, test_##fun)\
 {\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -78,7 +88,7 @@ TEST_F(AVXIntTest, test_##fun)\
     for(int32_t i = 0; i < INPUT_DATA_LEN; i += AVXInt::STEP_CNT)\
     {\
         a.load(input1_ + i);\
-        c = AVXInt::fun(a);\
+        c = ns::fun(a);\
         c.store(avxo_ + i);\
     }\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -87,7 +97,7 @@ TEST_F(AVXIntTest, test_##fun)\
     }\
 }
 
-#define TEST_INTx4_BIN_FUN(fun, naive_op)\
+#define TEST_INTx4_BIN_FUN(ns, fun, naive_op)\
 TEST_F(AVXIntTest, test_##fun)\
 {\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -99,7 +109,7 @@ TEST_F(AVXIntTest, test_##fun)\
     {\
         a.load(input1_ + i);\
         b.load(input2_ + i);\
-        c = AVXInt::fun(a, b);\
+        c = ns::fun(a, b);\
         c.store(avxo_ + i);\
     }\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -108,7 +118,7 @@ TEST_F(AVXIntTest, test_##fun)\
     }\
 }
 
-#define TEST_INTx4_SIG_FUN(fun, naive_op)\
+#define TEST_INTx4_SIG_FUN(ns, fun, naive_op)\
 TEST_F(AVXIntTest, test_##fun)\
 {\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -119,7 +129,7 @@ TEST_F(AVXIntTest, test_##fun)\
     for(int32_t i = 0; i < INPUT_DATA_LEN; i += AVXInt::STEP_CNT)\
     {\
         a.load(input1_ + i);\
-        c = AVXInt::fun(a);\
+        c = ns::fun(a);\
         c.store(avxo_ + i);\
     }\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
@@ -130,24 +140,24 @@ TEST_F(AVXIntTest, test_##fun)\
     }\
 }
 
-TEST_INTx4_BIN_OP(add, +)
-TEST_INTx4_BIN_OP(sub, -)
-TEST_INTx4_BIN_OP(mul, *)
-TEST_INTx4_BIN_OP(_and, &)
-TEST_INTx4_BIN_OP(_or, |)
-TEST_INTx4_BIN_OP(_xor, ^)
-TEST_INTx4_SIG_OP(_not, ~)
+TEST_INTx4_BIN_OP(AVXInt, add, +)
+TEST_INTx4_BIN_OP(AVXInt, sub, -)
+TEST_INTx4_BIN_OP(AVXInt, mul, *)
+TEST_INTx4_BIN_OP(AVXInt, _and, &)
+TEST_INTx4_BIN_OP(AVXInt, _or, |)
+TEST_INTx4_BIN_OP(AVXInt, _xor, ^)
+TEST_INTx4_SIG_OP(AVXInt, _not, ~)
 
-TEST_INTx4_BIN_OP(less_than, <)
-TEST_INTx4_BIN_OP(less_equal, <=)
-TEST_INTx4_BIN_OP(great_than, >)
-TEST_INTx4_BIN_OP(great_equal, >=)
-TEST_INTx4_BIN_OP(equal, ==)
-TEST_INTx4_BIN_OP(not_equal, !=)
+TEST_INTx4_BIN_OP(IntCompWraper,less_than, <)
+TEST_INTx4_BIN_OP(IntCompWraper,less_equal, <=)
+TEST_INTx4_BIN_OP(IntCompWraper,great_than, >)
+TEST_INTx4_BIN_OP(IntCompWraper,great_equal, >=)
+TEST_INTx4_BIN_OP(IntCompWraper,equal, ==)
+TEST_INTx4_BIN_OP(IntCompWraper,not_equal, !=)
 
-TEST_INTx4_SIG_FUN(abs, std::abs)
-TEST_INTx4_BIN_FUN(min, std::min)
-TEST_INTx4_BIN_FUN(max, std::max)
+TEST_INTx4_SIG_FUN(AVXInt, abs, std::abs)
+TEST_INTx4_BIN_FUN(AVXInt, min, std::min)
+TEST_INTx4_BIN_FUN(AVXInt, max, std::max)
 
 TEST_F(AVXIntTest, test_abs1)
 {

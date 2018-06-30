@@ -46,6 +46,7 @@ struct CLS_NAME {
     [[gnu::always_inline]]
     inline operator VAL_TYPE() const { return v; }
 
+
     //==== const values ======
     static constexpr int32_t STEP_CNT = ITEM_COUNT;
     static constexpr int32_t BIT_CNT = sizeof(VAL_TYPE)*8;
@@ -100,6 +101,10 @@ struct CLS_NAME {
         return v1;
         //return SIMDAPI(div, API_PREFIX, API_SUBFIX)(v1, v2);
     }
+
+    [[gnu::always_inline]]
+    inline CLS_NAME operator -() const { return sub(CONST_0, v); }
+
 
     //====== logic operation ============
     [[gnu::always_inline]]
@@ -231,20 +236,20 @@ struct CLS_NAME {
     static inline VAL_TYPE pred_2_num(VAL_TYPE pred) {
         //true ==> 1
         //false(>0) ==> 0
-        return -pred;
+        return if_then_else(pred, CONST_1, CONST_0);
     }
 
     [[gnu::always_inline]]
     static inline VAL_TYPE num_2_pred(VAL_TYPE num) {
         //1 ==> true(-1)
         //0 ==> false(0)
-        return -num;
+        return sub(CONST_0, num);
     }
 
     //=====min/max abs=================
     [[gnu::always_inline]]
     static inline VAL_TYPE abs(VAL_TYPE v) {
-        return if_then_else(great_than(v, CONST_0), v , -v);
+        return if_then_else(great_than(v, CONST_0), v , sub(CONST_0, v));
     }
 
     [[gnu::always_inline]]
