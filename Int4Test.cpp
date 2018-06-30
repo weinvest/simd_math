@@ -155,4 +155,13 @@ TEST_F(AVXIntTest, test_abs1)
     AVXInt b = AVXInt::abs(a);
     int32_t* pB = reinterpret_cast<int32_t*>(&b);
     std::cout << pB[0] << "," << pB[1] << "," << pB[2] << "," << pB[3] << std::endl;
+    AVXInt m = AVXInt::less_than(a, AVXInt::CONST_0);
+    int32_t* pM = reinterpret_cast<int32_t*>(&m);
+    std::cout << pM[0] << "," << pM[1] << "," << pM[2] << "," << pM[3] << std::endl;
+
+    AVXInt m_a = -a.v;
+    int32_t* pM_a = reinterpret_cast<int32_t*>(&pM_a);
+    std::cout << pM_a[0] << "," << pM_a[1] << "," << pM_a[2] << "," << pM_a[3] << std::endl;
+
+
 }
