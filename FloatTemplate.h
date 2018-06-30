@@ -409,6 +409,16 @@ struct CLS_NAME
         return floor(add(v, CONST_0p5));
     }
 
+    //reduce
+    [[gnu::always_inline]]
+    static inline VAL_ELE_TYPE reduce_add(VAL_TYPE v){
+#if
+    }
+
+    [[gnu::always_inline]]
+    static inline VAL_ELE_TYPE reduce_mul(VAL_TYPE v){
+
+    }
     //======sugar=================
 
     // ==== advance math ============

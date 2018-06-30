@@ -224,29 +224,27 @@ struct CLS_NAME {
     //========== if_then_else======================
     [[gnu::always_inline]]
     static inline VAL_TYPE if_then_else(VAL_TYPE pred, VAL_TYPE first, VAL_TYPE second) {
-        return rep_2_val(SIMDAPI(blendv, API_PREFIX, FAPI_SUBFIX)(float_rep(second), float_rep(first), float_rep(pred)));
+        return SIMDAPI(blendv, API_PREFIX, _epi8)(second, first, pred);
     }
 
     [[gnu::always_inline]]
     static inline VAL_TYPE pred_2_num(VAL_TYPE pred) {
-        //true(<0) ==> 1.0
-        //false(>0) ==> 0.0
-        //return add(mul(-half, sign(pred)), half);
-        return if_then_else(pred, CONST_1, CONST_0);
+        //true ==> 1
+        //false(>0) ==> 0
+        return -pred;
     }
 
     [[gnu::always_inline]]
     static inline VAL_TYPE num_2_pred(VAL_TYPE num) {
-        //1.0 ==> true(-nan)
-        //0.0 ==> false(0.0)
-        //return add(mul(-half, sign(pred)), half);
-        return if_then_else(equal(num, CONST_0), CONST_false, CONST_true);
+        //1 ==> true(-1)
+        //0 ==> false(0)
+        return -num;
     }
 
     //=====min/max abs=================
     [[gnu::always_inline]]
     static inline VAL_TYPE abs(VAL_TYPE v) {
-        return if_then_else(v, -v ,v);
+        return if_then_else(great_than(v, CONST_0), v , -v);
     }
 
     [[gnu::always_inline]]

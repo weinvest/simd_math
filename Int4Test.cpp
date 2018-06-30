@@ -124,6 +124,8 @@ TEST_F(AVXIntTest, test_##fun)\
     }\
     for(int32_t i = 0; i < INPUT_DATA_LEN; ++i)\
     {\
+       if(naive_[i] != avxo_[i])\
+       {std::cout << input1_[i] << ":" << naive_[i] << ":" << avxo_[i] << std::endl; }\
         EXPECT_EQ(naive_[i], avxo_[i]);\
     }\
 }
@@ -135,6 +137,22 @@ TEST_INTx4_BIN_OP(_and, &)
 TEST_INTx4_BIN_OP(_or, |)
 TEST_INTx4_BIN_OP(_xor, ^)
 TEST_INTx4_SIG_OP(_not, ~)
+
+TEST_INTx4_BIN_OP(less_than, <)
+TEST_INTx4_BIN_OP(less_equal, <=)
+TEST_INTx4_BIN_OP(great_than, >)
+TEST_INTx4_BIN_OP(great_equal, >=)
+TEST_INTx4_BIN_OP(equal, ==)
+TEST_INTx4_BIN_OP(not_equal, !=)
+
 TEST_INTx4_SIG_FUN(abs, std::abs)
 TEST_INTx4_BIN_FUN(min, std::min)
 TEST_INTx4_BIN_FUN(max, std::max)
+
+TEST_F(AVXIntTest, test_abs1)
+{
+    AVXInt a(-52, -73, -18, -8);
+    AVXInt b = AVXInt::abs(a);
+    int32_t* pB = reinterpret_cast<int32_t*>(&b);
+    std::cout << pB[0] << "," << pB[1] << "," << pB[2] << "," << pB[3] << std::endl;
+}
