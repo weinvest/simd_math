@@ -138,7 +138,7 @@ protected:
             std::random_device dev;
             std::mt19937_64 eng;
             eng.seed(dev());
-            std::uniform_real_distribution<double> distribution(0, 1);
+            std::uniform_real_distribution<double> distribution(0, 10);
 
             for (size_t i = 0; i < VECTOR_LEN; ++i) {
                 double tmp = distribution(eng);
@@ -220,6 +220,16 @@ TEST_SIMD(cdf)
 
 TEST_NAIVE(sqrt, std)
 TEST_SIMD(sqrt)
+
+TEST_NAIVE(floor, std)
+TEST_SIMD(floor)
+
+TEST_NAIVE(ceil, std)
+TEST_SIMD(ceil)
+
+TEST_NAIVE(round, std)
+TEST_SIMD(round)
+
 
 #if 0
 TEST_NAIVE(sin)
