@@ -1,6 +1,7 @@
 #ifndef _FAST_MATH_FLOATX8_H
 #define _FAST_MATH_FLOATX8_H
 
+#define FLOATx8
 #define CLS_NAME Floatx8
 #define VAL_TYPE __m256
 #define VAL_ELE_TYPE float
@@ -25,6 +26,7 @@
 #define RECIP_MAGIC_NUMBER 0x5F375A86
 #include "FloatTemplate.h"
 
+#undef FLOATx8
 #undef CLS_NAME
 #undef VAL_TYPE
 #undef VAL_ELE_TYPE

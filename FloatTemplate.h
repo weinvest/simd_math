@@ -418,13 +418,20 @@ struct CLS_NAME
     //reduce
     [[gnu::always_inline]]
     static inline VAL_ELE_TYPE reduce_add(VAL_TYPE v){
-#if
+#if FLOATx8
+    __m256 t1 = _mm256_hadd_ps(a,a);
+    __m256 t2 = _mm256_hadd_ps(t1,t1);
+    __m128 t3 = _mm256_extractf128_ps(t2,1);
+    __m128 t4 = _mm_add_ss(_mm256_castps256_ps128(t2),t3);
+    return _mm_cvtss_f32(t4);
+#elif DOUBLEx4
+    __m256d t1 = _mm256_hadd_pd(a,a);
+    __m128d t2 = _mm256_extractf128_pd(t1,1);
+    __m128d t3 = _mm_add_sd(_mm256_castpd256_pd128(t1),t2);
+    return _mm_cvtsd_f64(t3);
+#endif
     }
 
-    [[gnu::always_inline]]
-    static inline VAL_ELE_TYPE reduce_mul(VAL_TYPE v){
-
-    }
     //======sugar=================
 
     // ==== advance math ============

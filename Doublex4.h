@@ -1,6 +1,7 @@
 #ifndef _FASTMATH_DOUBLEX4_H
 #define _FASTMATH_DOUBLEX4_H
 
+#define DOUBLEx4
 #define CLS_NAME Doublex4
 #define VAL_TYPE __m256d
 #define VAL_ELE_TYPE double
@@ -26,6 +27,7 @@
 #define RECIP_MAGIC_NUMBER 0x5FE6EB50C7B537A9
 #include "FloatTemplate.h"
 
+#undef DOUBLEx4
 #undef CLS_NAME
 #undef VAL_TYPE
 #undef VAL_ELE_TYPE
