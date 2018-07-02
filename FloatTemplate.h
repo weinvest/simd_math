@@ -88,7 +88,6 @@ struct CLS_NAME
     [[gnu::always_inline]]
     inline operator VAL_TYPE () const { return v; }
 
-
     //==== const values ======
     static constexpr int32_t EXPO_BIT_CNT = EXP_BIT_COUNT;
     static constexpr int32_t MANT_BIT_CNT = MAN_BIT_COUNT;
@@ -269,6 +268,10 @@ struct CLS_NAME
         return *(VAL_TYPE*)&int_rep;
     }
 
+    [[gnu::always_inline]]
+    inline CLS_NAME operator- () const { return CLS_NAME(_xor(v, SIGN_BIT_MASK)); }
+
+
     // ==== double struct ===================
     [[gnu::always_inline]]
     static inline VAL_TYPE sign(VAL_TYPE v) {
@@ -405,6 +408,16 @@ struct CLS_NAME
         return v2;
     }
 
+    [[gnu::always_inline]]
+    static inline VAL_TYPE min(VAL_TYPE v1, VAL_TYPE v2, VAL_TYPE v3) {
+        return min(v1, min(v2, v3));
+    }
+
+    [[gnu::always_inline]]
+    static inline VAL_TYPE max(VAL_TYPE v1, VAL_TYPE v2, VAL_TYPE v3) {
+        return max(v1, max(v2, v3));
+    }    
+    
     // ==== round ===================
     [[gnu::always_inline]]
     static inline VAL_TYPE floor(VAL_TYPE v) {
@@ -422,7 +435,7 @@ struct CLS_NAME
     }
 
     [[gnu::always_inline]]
-    static inline VAL_TYPE round1(VAL_TYPE v, VAL_TYPE def) {
+    static inline VAL_TYPE round(VAL_TYPE v, VAL_TYPE def) {
         
         return if_then_else(is_nan(v), def, floor(add(v, CONST_0p5)));
     }
