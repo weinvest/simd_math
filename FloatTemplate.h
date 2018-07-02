@@ -353,6 +353,12 @@ struct CLS_NAME
     }
 
     [[gnu::always_inline]]
+    static inline VAL_TYPE if_elif_else(VAL_TYPE ifm, VAL_TYPE first, VAL_TYPE elifm, VAL_TYPE second, VAL_TYPE third)
+    {
+        return if_then_else(ifm, first, if_then_else(elifm, second, third));
+    }
+
+    [[gnu::always_inline]]
     static inline VAL_TYPE pred_2_num(VAL_TYPE pred)
     {
         //true(<0) ==> 1.0
