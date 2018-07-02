@@ -345,6 +345,12 @@ struct CLS_NAME
         return SIMDAPI(cmp, API_PREFIX, API_SUBFIX)(first, second, _CMP_NEQ_OQ);
     }
 
+    [[gnu::always_inline]]
+    static inline VAL_TYPE is_nan(VAL_TYPE v)
+    {
+        VAL_TYPE x0 = mul(CONST_0, v);
+        return not(equal(CONST_0, x0));
+    }
     //========== if_then_else======================
     [[gnu::always_inline]]
     static inline VAL_TYPE if_then_else(VAL_TYPE pred, VAL_TYPE first, VAL_TYPE second)
@@ -413,6 +419,12 @@ struct CLS_NAME
     [[gnu::always_inline]]
     static inline VAL_TYPE round(VAL_TYPE v) {
         return floor(add(v, CONST_0p5));
+    }
+
+    [[gnu::always_inline]]
+    static inline VAL_TYPE round1(VAL_TYPE v, VAL_TYPE def) {
+        
+        return if_then_else(is_nan(v), def, floor(add(v, CONST_0p5)));
     }
 
     //reduce

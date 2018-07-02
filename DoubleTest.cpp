@@ -6,7 +6,7 @@
 #include "Doublex4.h"
 #include <boost/math/distributions/normal.hpp>
 
-constexpr size_t VECTOR_LEN = 1UL<<16;
+constexpr size_t VECTOR_LEN = 1UL<<10;
 constexpr size_t ALIGN = 32;
 constexpr size_t ITER_COUNT = 10000;
 constexpr double D_EPSILON = 1e-11;
@@ -409,6 +409,20 @@ TEST_F(OptionTest, fast_put)
         std::cout << std::setw(3) << i << ":" << std::setprecision(10) << mNaivePut[i] << " " << mFastPut[i] << "\n";
 //        ASSERT_NEAR(mNaiveVol[i], mFastVol[i], D_EPSILON);
     }
+}
+
+TEST_F(AVXDoubleTest, is_nan)
+{
+    double normal(8.2425358);
+    double nan(std::numeric_limits<double>::quiet_NaN());
+
+    Doublex4 v(normal, nan, nan, normal);
+
+    auto result = Doublex4::is_nan(v);
+    double* r = (double*)&result;
+
+    std::cout << r[0] << ":" << r[1] << ":" << r[2] << ":" << r[3] << "\n";
+    std::cout << (0*nan) << std::endl;
 }
 #endif
 
