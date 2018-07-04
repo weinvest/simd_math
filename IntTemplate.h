@@ -175,8 +175,7 @@ struct CLS_NAME {
     static inline VAL_TYPE sign(VAL_TYPE v) {
         //>0 return 1
         //<0 return -1
-        static const VAL_TYPE BASE_BIT_MASK = HELP_FUNC::const_val(1.0);
-        return _or(_and(v, SIGN_BIT_MASK), BASE_BIT_MASK);
+        return if_then_else(great_than(v, CONST_0), CONST_1, CONST_m1);
     }
 
     [[gnu::always_inline]]
