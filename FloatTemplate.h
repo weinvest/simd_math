@@ -88,6 +88,9 @@ struct CLS_NAME
     [[gnu::always_inline]]
     inline operator VAL_TYPE () const { return v; }
 
+    [[gnu::always_inline]]
+    inline INT_VAL_TYPE to_int() const { return HELP_FUNC::convert_2_int(v); }
+
     //==== const values ======
     static constexpr int32_t EXPO_BIT_CNT = EXP_BIT_COUNT;
     static constexpr int32_t MANT_BIT_CNT = MAN_BIT_COUNT;
@@ -152,6 +155,22 @@ struct CLS_NAME
     {
         SIMDAPI(store, API_PREFIX, API_SUBFIX)(addr, v);
     }
+
+    static void fill(VAL_ELE_TYPE* addr, VAL_ELE_TYPE v, int32_t cnt) {
+        CLS_NAME vv(v);
+        auto restCnt = cnt % STEP_CNT;
+        auto fastCnt = (cnt - restCnt) / STEP_CNT;
+        for(auto i = 0; i < fastCnt; i += STEP_CNT)
+        {
+            vv.store(addr + i);
+        }
+
+        for(auto i = cnt - 1; 0 != restCnt; --i, --restCnt)
+        {
+            addr[i] = v;
+        }
+    }
+
 
     //===== arithmetic operation ===========
     [[gnu::always_inline]]
@@ -365,6 +384,12 @@ struct CLS_NAME
     static inline VAL_TYPE if_elif_else(VAL_TYPE ifm, VAL_TYPE first, VAL_TYPE elifm, VAL_TYPE second, VAL_TYPE third)
     {
         return if_then_else(ifm, first, if_then_else(elifm, second, third));
+    }
+
+    [[gnu::always_inline]]
+    static inline VAL_TYPE if_elif_else(VAL_TYPE pred1, VAL_TYPE v1, VAL_TYPE pred2, VAL_TYPE v2, VAL_TYPE pred3, VAL_TYPE v3, VAL_TYPE v4)
+    {
+        return if_then_else(pred1, v1, if_then_else(pred2, v2, if_then_else(pred3, v3, v4)));
     }
 
     [[gnu::always_inline]]

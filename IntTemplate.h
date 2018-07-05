@@ -80,6 +80,21 @@ struct CLS_NAME {
         *(VAL_TYPE*)addr = v;
     }
 
+    static void fill(VAL_ELE_TYPE* addr, VAL_ELE_TYPE v, int32_t cnt) {
+        CLS_NAME vv(v);
+        auto restCnt = cnt % STEP_CNT;
+        auto fastCnt = (cnt - restCnt) / STEP_CNT;
+        for(auto i = 0; i < fastCnt; i += STEP_CNT)
+        {
+            vv.store(addr + i);
+        }
+
+        for(auto i = cnt - 1; 0 != restCnt; --i, --restCnt)
+        {
+            addr[i] = v;
+        }
+    }
+
     //===== arithmetic operation ===========
     [[gnu::always_inline]]
     static inline VAL_TYPE add(VAL_TYPE v1, VAL_TYPE v2) {
