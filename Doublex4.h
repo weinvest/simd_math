@@ -4,6 +4,7 @@
 #define DOUBLEx4
 #define CLS_NAME Doublex4
 #define VAL_TYPE __m256d
+#define INT32_TYPE __m128i
 #define VAL_ELE_TYPE double
 #define INT_VAL_TYPE __m256i
 #define INT_ELE_TYPE int64_t
@@ -18,8 +19,8 @@
 #define API_PREFIX _mm256
 #define API_SUBFIX _pd
 #define INTAPI_SUBFIX _epi64
+#define INT32API_SUBFIX _epi32
 #define INT_VEC_TYPE __v4di
-
 #define CONVERT_2_INT cvtpd
 #define CONVERT_FROM_INT cvtepi64
 #define SLOW_CONVERT
@@ -45,4 +46,5 @@
 #undef CONVERT_2_INT
 #undef CONVERT_FROM_INT 
 #undef RECIP_MAGIC_NUMBER
+#undef INT32_TYPE
 #endif

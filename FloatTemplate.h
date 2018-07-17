@@ -91,6 +91,12 @@ struct CLS_NAME
     [[gnu::always_inline]]
     inline INT_VAL_TYPE to_int() const { return HELP_FUNC::convert_2_int(v); }
 
+    [[gnu::always_inline]]
+    inline INT32_TYPE to_int32() const { return SIMDAPI(CONVERT_2_INT,API_PREFIX, INT32API_SUBFIX)(v);}
+
+    [[gnu::always_inline]]
+    inline INT_VAL_TYPE to_int64() const { return HelpDoublex4::convert_2_int(v); }
+
     //==== const values ======
     static constexpr int32_t EXPO_BIT_CNT = EXP_BIT_COUNT;
     static constexpr int32_t MANT_BIT_CNT = MAN_BIT_COUNT;
